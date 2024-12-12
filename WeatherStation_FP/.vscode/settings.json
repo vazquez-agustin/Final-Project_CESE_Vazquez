@@ -2,5 +2,6 @@
     "files.associations": {
         "esp_rom_gpio.h": "c",
         "gpio.h": "c"
-    }
+    },
+    "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }
