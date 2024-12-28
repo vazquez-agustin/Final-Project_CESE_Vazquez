@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "WeatherStation_FP",
-    "project_version":    "bf854a2-dirty",
+    "project_version":    "6c71530-dirty",
     "project_path":       "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP",
     "idf_path":           "C:/Users/avazquez/.platformio/packages/framework-espidf",
     "build_dir":          "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02",

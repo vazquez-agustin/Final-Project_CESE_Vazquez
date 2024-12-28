@@ -1,12 +1,6 @@
-#ifndef MAIN_H
-#define MAIN_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // MAIN_H
+#include "esp_system.h"
+#include "driver/adc.h"
+#include "esp_log.h"
+#include "esp_err.h"
+#include <stdio.h>
+#include <string.h>

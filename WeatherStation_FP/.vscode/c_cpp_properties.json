@@ -10,7 +10,6 @@
             "includePath": [
                 "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/include",
                 "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/src",
-                "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/drivers/i2c/inc",
                 "C:/Users/avazquez/.platformio/packages/framework-espidf/components/riscv/include",
                 "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/config",
                 "C:/Users/avazquez/.platformio/packages/framework-espidf/components/newlib/platform_include",
@@ -169,7 +168,6 @@
                 "path": [
                     "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/include",
                     "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/src",
-                    "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/drivers/i2c/inc",
                     "C:/Users/avazquez/.platformio/packages/framework-espidf/components/riscv/include",
                     "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/config",
                     "C:/Users/avazquez/.platformio/packages/framework-espidf/components/newlib/platform_include",
