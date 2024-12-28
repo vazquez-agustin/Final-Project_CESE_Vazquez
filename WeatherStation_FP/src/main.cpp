@@ -1,82 +1,116 @@
 
-#include "main.h"
+#include <stdio.h>
+#include <string.h>
 #include "esp_log.h"
-#include <iostream>
+#include "esp_err.h"
+#include "driver/i2c.h"
 
-// Configuración de pines y frecuencia
-#define I2C_MASTER_SDA_IO GPIO_NUM_4    
-#define I2C_MASTER_SCL_IO GPIO_NUM_5
-#define I2C_MASTER_NUM I2C_NUM_0
-#define I2C_MASTER_FREQ_HZ 100000
-#define I2C_ADDRESS 0x76
+#define I2C_MASTER_NUM      I2C_NUM_0      // I2C port number
+#define I2C_MASTER_SCL_IO   5         // I2C SCL pin
+#define I2C_MASTER_SDA_IO   4         // I2C SDA pin
+#define I2C_MASTER_FREQ_HZ  400000    // Frequency (400 kHz - FAST MODE)
+#define I2C_SLAVE_ADDR      0x76
+// BME680 chip id
+#define BME680_CHIP_ID                 0x61    // BME680_REG_ID<7:0>
 
 static const char *TAG = "I2C";
 
-// Prototipos privados
-static void i2c_master_init(void);
-esp_err_t i2c_read(uint8_t address, uint8_t *data_rd, size_t size);
-esp_err_t i2c_write(uint8_t address, uint8_t *data_wr, size_t size);
+/*
 
-void i2c_init(void) {
-    i2c_master_init();
+I2C INITIALIZATION FUNCTION
+
+*/
+
+static esp_err_t set_i2c(void)
+{
+    i2c_config_t i2c_config = {};
+
+    i2c_config.mode = I2C_MODE_MASTER;
+    i2c_config.sda_io_num = I2C_MASTER_SDA_IO;
+    i2c_config.sda_pullup_en = true;
+    i2c_config.scl_io_num = I2C_MASTER_SCL_IO;
+    i2c_config.scl_pullup_en = true;
+    i2c_config.master.clk_speed = I2C_MASTER_FREQ_HZ;
+    i2c_config.clk_flags = 0;
+
+    ESP_ERROR_CHECK(i2c_param_config(I2C_NUM_0, &i2c_config));
+    ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, ESP_INTR_FLAG_LEVEL1));
+    //ESP_ERROR_CHECK hace un handling de error
+
+    return ESP_OK;
 }
 
-esp_err_t i2c_read(uint8_t address, uint8_t *data_rd, size_t size) {
-    return i2c_master_read_from_device(I2C_MASTER_NUM, address, data_rd, size, pdMS_TO_TICKS(1000));
-}
-
-esp_err_t i2c_write(uint8_t address, uint8_t *data_wr, size_t size) {
-    return i2c_master_write_to_device(I2C_MASTER_NUM, address, data_wr, size, pdMS_TO_TICKS(1000));
-}
-
-void i2c_master_init() {
-    i2c_config_t conf;
-    conf.mode = I2C_MODE_MASTER;
-    conf.sda_io_num = I2C_MASTER_SDA_IO;
-    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.scl_io_num = I2C_MASTER_SCL_IO;
-    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.master.clk_speed = I2C_MASTER_FREQ_HZ;
-    conf.clk_flags = 0;
-
-    esp_err_t err = i2c_param_config(I2C_MASTER_NUM, &conf);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Error configurando I2C: %s", esp_err_to_name(err));
-        return;
+int i2c_slave_read(uint8_t addr, uint8_t reg, uint8_t *data) {
+    if (!data) {
+        return ESP_ERR_INVALID_ARG; // Validación de puntero de datos
     }
-    i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);
-}
 
-uint8_t bme680_read_chip_id() {
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (addr << 1) | I2C_MASTER_WRITE, true); // 7-bit Address (<<1)
+    i2c_master_write_byte(cmd, reg, true); // Registro a leer
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (addr << 1) | I2C_MASTER_READ, true); // Dirección y lectura
+    i2c_master_read_byte(cmd, data, I2C_MASTER_NACK); // Leer un byte y enviar NACK
+    i2c_master_stop(cmd);
+
+    esp_err_t err = i2c_master_cmd_begin(I2C_NUM_0, cmd, pdMS_TO_TICKS(1000));
+    i2c_cmd_link_delete(cmd);
+
+    return err; // Devuelve el estado de la operación
+}
+/*
+static esp_err_t read_chip_id(uint8_t *chip_id) {
+    
+    uint8_t reg_addr = 0xD0;
+
+    esp_err_t ret = i2c_master_write_read_device(I2C_NUM_0,
+                                                 I2C_SLAVE_ADDR,
+                                                 &reg_addr,
+                                                 1,
+                                                 chip_id,
+                                                 1,
+                                                 pdMS_TO_TICKS(1000));
+
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "I2C Read failed: %s", esp_err_to_name(ret));
+    }
+
+    return ret;
+}
+*/
+/*
+static void i2c_scanner(void) {
+    for (uint8_t i = 1; i < 127; i++) {
+        i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+        i2c_master_start(cmd);
+        i2c_master_write_byte(cmd, (i << 1) | I2C_MASTER_WRITE, true);
+        i2c_master_stop(cmd);
+        esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
+        i2c_cmd_link_delete(cmd);
+
+        if (ret == ESP_OK) {
+            ESP_LOGI(TAG, "Device found at address 0x%02X", i);
+        }
+    }
+}
+*/
+extern "C" void app_main(void)
+{
+
     uint8_t chip_id = 0;
-    uint8_t reg = 0xD0;
-    esp_err_t err;
 
-    // Enviar registro
-    err = i2c_write(I2C_ADDRESS, &reg, 1);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Error escribiendo a I2C: %s", esp_err_to_name(err));
-        return 0xFF;
-    }
+    ESP_ERROR_CHECK(set_i2c());
 
-    // Leer el valor
-    err = i2c_read(I2C_ADDRESS, &chip_id, 1);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Error leyendo de I2C: %s", esp_err_to_name(err));
-        return 0xFF;
-    }
-
-    return chip_id;
-}
-
-extern "C" void app_main() {
-    i2c_init(); // Inicialización I2C
-    uint8_t chip_id = bme680_read_chip_id();
-
-    if (chip_id == 0xFF) {
-        ESP_LOGE(TAG, "No se pudo leer el ID del chip");
+    if (i2c_slave_read(I2C_SLAVE_ADDR, 0xD0, &chip_id) == ESP_OK) {
+        ESP_LOGI(TAG, "BME680 Chip ID: 0x%02X", chip_id);
+        if (chip_id == 0x61) {
+            ESP_LOGI(TAG, "Chip ID correcto. El sensor BME680 está funcionando.");
+        } else {
+            ESP_LOGW(TAG, "Chip ID incorrecto. Esperado: 0x61, obtenido: 0x%02X", chip_id);
+        }
     } else {
-        std::cout << "Chip ID leído: 0x" << std::hex << static_cast<int>(chip_id) 
-                  << ", ID esperado: 0x61" << std::endl;
+        ESP_LOGE(TAG, "Error al leer el Chip ID del BME680.");
     }
+    
 }
