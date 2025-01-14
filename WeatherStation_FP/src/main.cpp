@@ -1,76 +1,67 @@
 #include "main.h"
-#include <iostream>
 
+static const char *TAG = "WIFI_CONNECTION";
 
-// WiFi credentials
-#define WIFI_SSID "SSID"
-#define WIFI_PASS "PASSWORD"
+// Configuración de WiFi
+#define WIFI_SSID "TU_SSID"
+#define WIFI_PASS "TU_PASSWORD"
 
-// InfluxDB local server URL
-#define INFLUXDB_URL "http://localhost:8086"
-#define DB_NAME "XXXXX"
-
-static const char *TAG = "INFLUXDB_CLIENT";
-
-float temperaturas[5] = {23.5, 24.0, 22.8, 25.2, 23.9};
-
-static esp_err_t _http_event_handler(esp_http_client_event_t *evt)
+static void wifi_event_handler(void* arg, esp_event_base_t event_base, 
+                                int32_t event_id, void* event_data)
 {
-    switch (evt->event_id) {
-        case HTTP_EVENT_ERROR:
-            ESP_LOGD(TAG, "HTTP_EVENT_ERROR");
+    switch(event_id) {
+        case WIFI_EVENT_STA_START:
+            esp_wifi_connect();
             break;
-        case HTTP_EVENT_ON_CONNECTED:
-            ESP_LOGD(TAG, "HTTP_EVENT_ON_CONNECTED");
+        case WIFI_EVENT_STA_CONNECTED:
+            ESP_LOGI(TAG, "Conectado a %s", WIFI_SSID);
             break;
-        case HTTP_EVENT_HEADER_SENT:
-            ESP_LOGD(TAG, "HTTP_EVENT_HEADER_SENT");
+        case WIFI_EVENT_STA_DISCONNECTED:
+            ESP_LOGI(TAG, "Desconectado de %s, intentando reconectar...", WIFI_SSID);
+            esp_wifi_connect();
             break;
-        case HTTP_EVENT_ON_HEADER:
-            ESP_LOGD(TAG, "HTTP_EVENT_ON_HEADER, key=%s, value=%s", evt->header_key, evt->header_value);
-            break;
-        case HTTP_EVENT_ON_DATA:
-            ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
-            if (!esp_http_client_is_chunked_response(evt->client)) {
-                // Mostrar la respuesta solo si no es chunked
-                printf("%.*s", evt->data_len, (char*)evt->data);
-            }
-            break;
-        case HTTP_EVENT_ON_FINISH:
-            ESP_LOGD(TAG, "HTTP_EVENT_ON_FINISH");
-            break;
-        case HTTP_EVENT_DISCONNECTED:
-            ESP_LOGD(TAG, "HTTP_EVENT_DISCONNECTED");
+        default:
             break;
     }
-    return ESP_OK;
 }
 
-void send_data_to_influxdb(float temperature) {
-    char data[100];
-    sprintf(data, "temperatura,location=casa value=%.1f", temperature);
-
-    esp_http_client_config_t config = {
-        .url = INFLUXDB_URL "/write?db=" DB_NAME,
-        .event_handler = _http_event_handler,
-        .method = HTTP_METHOD_POST
-    };
-
-    esp_http_client_handle_t client = esp_http_client_init(&config);
-
-    esp_http_client_set_post_field(client, data, strlen(data));
-    esp_http_client_set_header(client, "Content-Type", "text/plain");
-
-    esp_err_t err = esp_http_client_perform(client);
-    if (err == ESP_OK) {
-        ESP_LOGI(TAG, "HTTP POST Status = %d, content_length = %d",
-                esp_http_client_get_status_code(client),
-                esp_http_client_get_content_length(client));
-    } else {
-        ESP_LOGE(TAG, "HTTP POST request failed: %s", esp_err_to_name(err));
+static void ip_event_handler(void* arg, esp_event_base_t event_base, 
+                                int32_t event_id, void* event_data)
+{
+    switch(event_id) {
+        case IP_EVENT_STA_GOT_IP:
+            ESP_LOGI(TAG, "Obtenido IP");
+            break;
+        default:
+            break;
     }
+}
 
-    esp_http_client_cleanup(client);
+void connect_to_wifi() {
+    // Inicializar el subsistema WiFi
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    esp_netif_t *sta_netif = esp_netif_create_default_wifi_sta();
+    assert(sta_netif);
+
+    // Configuración WiFi
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+
+    // Registro de eventos WiFi
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &wifi_event_handler, NULL));
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &ip_event_handler, NULL));
+
+    // Configuración de la estación WiFi
+    wifi_config_t wifi_config = {
+        .sta = {
+            .ssid = WIFI_SSID,
+            .password = WIFI_PASS
+        },
+    };
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_start());
 }
 
 void app_main(void)
@@ -83,16 +74,8 @@ void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
 
-    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
-    ESP_ERROR_CHECK(example_connect());
+    ESP_LOGI(TAG, "Conectando a %s...", WIFI_SSID);
+    connect_to_wifi();
 
-    for (int i = 0; i < 5; i++) {
-        send_data_to_influxdb(temperaturas[i]);
-        vTaskDelay(1000 / portTICK_PERIOD_MS); // Espera un segundo
-    }
-
-    ESP_LOGI(TAG, "Fin de la prueba. Desconectando...");
-    ESP_ERROR_CHECK(esp_wifi_stop());
+    // Tu lógica principal aquí después de la conexión WiFi
 }
