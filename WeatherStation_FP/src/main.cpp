@@ -1,54 +1,98 @@
 #include "main.h"
 #include <iostream>
 
+
 // WiFi credentials
-#define WIFI_SSID "FRITZ!Box 7530 KW"
-#define WIFI_PASS "43985539165212248477"
+#define WIFI_SSID "SSID"
+#define WIFI_PASS "PASSWORD"
 
 // InfluxDB local server URL
-#define INFLUXDB_URL "http://192.168.0.100:8086/api/v2/write"
+#define INFLUXDB_URL "http://localhost:8086"
+#define DB_NAME "XXXXX"
 
-// InfluxDB credentials and configuration
-#define INFLUXDB_BUCKET "meditions"
-#define INFLUXDB_ORG "stationtest"
-#define INFLUXDB_TOKEN "vND8qiFkSJqwD0kZqPAGilY16z3fTexXVbOlYb968a6wFsGj9MT5JCkcI3aforCHT9ncyz33RE3gYOKx20Rccw=="
+static const char *TAG = "INFLUXDB_CLIENT";
 
-// WiFi events handler
-static void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
-    if (event_id == WIFI_EVENT_STA_START) {
-        esp_wifi_connect();
-    } else if (event_id == WIFI_EVENT_STA_DISCONNECTED) {
-        ESP_LOGI(TAG, "Intentando reconexión al WiFi");
-        esp_wifi_connect();
-    } else if (event_id == IP_EVENT_STA_GOT_IP) {
-        ESP_LOGI(TAG, "WiFi conectado");
+float temperaturas[5] = {23.5, 24.0, 22.8, 25.2, 23.9};
+
+static esp_err_t _http_event_handler(esp_http_client_event_t *evt)
+{
+    switch (evt->event_id) {
+        case HTTP_EVENT_ERROR:
+            ESP_LOGD(TAG, "HTTP_EVENT_ERROR");
+            break;
+        case HTTP_EVENT_ON_CONNECTED:
+            ESP_LOGD(TAG, "HTTP_EVENT_ON_CONNECTED");
+            break;
+        case HTTP_EVENT_HEADER_SENT:
+            ESP_LOGD(TAG, "HTTP_EVENT_HEADER_SENT");
+            break;
+        case HTTP_EVENT_ON_HEADER:
+            ESP_LOGD(TAG, "HTTP_EVENT_ON_HEADER, key=%s, value=%s", evt->header_key, evt->header_value);
+            break;
+        case HTTP_EVENT_ON_DATA:
+            ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
+            if (!esp_http_client_is_chunked_response(evt->client)) {
+                // Mostrar la respuesta solo si no es chunked
+                printf("%.*s", evt->data_len, (char*)evt->data);
+            }
+            break;
+        case HTTP_EVENT_ON_FINISH:
+            ESP_LOGD(TAG, "HTTP_EVENT_ON_FINISH");
+            break;
+        case HTTP_EVENT_DISCONNECTED:
+            ESP_LOGD(TAG, "HTTP_EVENT_DISCONNECTED");
+            break;
     }
+    return ESP_OK;
 }
 
-// WiFi initialization
-void wifi_init_sta() {
-    esp_netif_init();
-    esp_event_loop_create_default();
-    esp_netif_create_default_wifi_sta();
+void send_data_to_influxdb(float temperature) {
+    char data[100];
+    sprintf(data, "temperatura,location=casa value=%.1f", temperature);
 
-    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    esp_wifi_init(&cfg);
-
-    esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &wifi_event_handler, NULL);
-    esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &wifi_event_handler, NULL);
-
-    wifi_config_t wifi_config = {
-        .sta = {
-            .ssid = WIFI_SSID,
-            .password = WIFI_PASS,
-        },
+    esp_http_client_config_t config = {
+        .url = INFLUXDB_URL "/write?db=" DB_NAME,
+        .event_handler = _http_event_handler,
+        .method = HTTP_METHOD_POST
     };
-    esp_wifi_set_mode(WIFI_MODE_STA);
-    esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
-    esp_wifi_start();
+
+    esp_http_client_handle_t client = esp_http_client_init(&config);
+
+    esp_http_client_set_post_field(client, data, strlen(data));
+    esp_http_client_set_header(client, "Content-Type", "text/plain");
+
+    esp_err_t err = esp_http_client_perform(client);
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG, "HTTP POST Status = %d, content_length = %d",
+                esp_http_client_get_status_code(client),
+                esp_http_client_get_content_length(client));
+    } else {
+        ESP_LOGE(TAG, "HTTP POST request failed: %s", esp_err_to_name(err));
+    }
+
+    esp_http_client_cleanup(client);
 }
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+void app_main(void)
+{
+    // Inicializar NVS
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+
+    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    ESP_ERROR_CHECK(example_connect());
+
+    for (int i = 0; i < 5; i++) {
+        send_data_to_influxdb(temperaturas[i]);
+        vTaskDelay(1000 / portTICK_PERIOD_MS); // Espera un segundo
+    }
+
+    ESP_LOGI(TAG, "Fin de la prueba. Desconectando...");
+    ESP_ERROR_CHECK(esp_wifi_stop());
 }
