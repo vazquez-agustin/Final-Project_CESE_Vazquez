@@ -8,12 +8,11 @@ static const char *TAG = "WiFi";
 
 // InfluxDB configuration
 // URL
-#define INFLUXDB_URL "http://192.168.0.100:8086/api/v2/write"
-
+#define INFLUXDB_IP "192.168.178.129"
 // Credentials
 #define INFLUXDB_BUCKET "meditions"      
 #define INFLUXDB_ORG "stationtest" 
-#define INFLUXDB_TOKEN "TM9R0O332u8dfSW01CrSKenU2NcWKs80xY6lmn1GGWOc6Ey8TqELg5hWq3uHLoE0qh4Wr32CtLN8UVl25cyUPA=="  // Token generado por InfluxDB
+#define INFLUXDB_TOKEN "rwSRkEyDRFF_Y6JMqD1JxZ_lZUJzFCGUIgzj9Li9nYlo7XUtQPXbCxY1Xvs3i-4z3-cbY7FwEp2hoI6r1P8LQQ=="  // Token generado por InfluxDB
 
 // WiFi events handler
 static void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
@@ -57,19 +56,26 @@ void wifi_init_sta() {
     ESP_LOGI(TAG, "WiFi inicializado. Intentando conectar...");
 }
 
-void send_sensor_data(float temperature, float humidity, int data_count) {
-    char post_data[200];
-    snprintf(post_data, sizeof(post_data),
-             "sensores,dispositivo=esp32-c3 temperatura=%.2f,humedad=%.2f,count=%d",
-             temperature, humidity, data_count);
+// HTTP event handler (optional, logs responses)
+esp_err_t http_event_handler(esp_http_client_event_t *evt) {
+    switch (evt->event_id) {
+        case HTTP_EVENT_ON_DATA:
+            ESP_LOGI(TAG, "Datos recibidos: %.*s", evt->data_len, (char *)evt->data);
+            break;
+        default:
+            break;
+    }
+    return ESP_OK;
+}
 
-    char full_url[300];
-    snprintf(full_url, sizeof(full_url), "%s?bucket=%s&org=%s", INFLUXDB_URL, INFLUXDB_BUCKET, INFLUXDB_ORG);
+// Function to send data to InfluxDB
+void send_data_to_influxdb() {
+    const char *post_data = "humedad,location=office value=25.5"; // Line Protocol
 
     esp_http_client_config_t config = {
-        .url = full_url,
+        .url = "http://192.168.178.129:8086/api/v2/write?org=stationtest&bucket=measurements&precision=s",
         .method = HTTP_METHOD_POST,
-        .timeout_ms = 5000,
+        .event_handler = http_event_handler,
     };
 
     esp_http_client_handle_t client = esp_http_client_init(&config);
@@ -78,10 +84,11 @@ void send_sensor_data(float temperature, float humidity, int data_count) {
     esp_http_client_set_post_field(client, post_data, strlen(post_data));
 
     esp_err_t err = esp_http_client_perform(client);
+
     if (err == ESP_OK) {
-        ESP_LOGI(TAG, "Datos enviados: %s", post_data);
+        ESP_LOGI(TAG, "Datos enviados correctamente a InfluxDB. Estado: %d", esp_http_client_get_status_code(client));
     } else {
-        ESP_LOGE(TAG, "Error al enviar datos: %s", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Error enviando datos: %s", esp_err_to_name(err));
     }
 
     esp_http_client_cleanup(client);
@@ -101,14 +108,11 @@ extern "C" void app_main() {
 
     ESP_LOGI(TAG, "Comenzando simulación de envío de datos a InfluxDB");
 
-    // Proof of concept: sending 5 sensor readings
-    for (int i = 1; i <= 5; i++) {
-        float temperatura = 20.0 + (rand() % 100) / 10.0; // Simulación: 20.0°C a 29.9°C
-        float humedad = 50.0 + (rand() % 500) / 10.0;     // Simulación: 50.0% a 99.9%
-        ESP_LOGI(TAG, "Medición %d: Temperatura=%.2f, Humedad=%.2f", i, temperatura, humedad);
-        send_sensor_data(temperatura, humedad, i);
-        vTaskDelay(pdMS_TO_TICKS(2000)); // Pausa de 2 segundos entre envíos
-    }
+    send_data_to_influxdb();
+    // Periodic task to send data
+    //while (true) {
+    //    send_data_to_influxdb();
+    //    vTaskDelay(pdMS_TO_TICKS(10000)); // Envia cada 10 segundos
+    //}
 
-    ESP_LOGI(TAG, "Datos enviados a InfluxDB. Fin de la simulación.");
 }
