@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP
+# Install script for directory: C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/esp-idf/cmake_install.cmake")
+  include("C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/esp-idf/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

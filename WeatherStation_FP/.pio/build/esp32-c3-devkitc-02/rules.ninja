@@ -1694,7 +1694,7 @@ rule C_STATIC_LIBRARY_LINKER____idf_src
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\avazquez\.platformio\packages\tool-cmake\bin\cmake.exe -SC:\Users\avazquez\OneDrive\Escritorio\Final-Project_CESE_Vazquez\WeatherStation_FP -BC:\Users\avazquez\OneDrive\Escritorio\Final-Project_CESE_Vazquez\WeatherStation_FP\.pio\build\esp32-c3-devkitc-02
+  command = C:\Users\avazquez\.platformio\packages\tool-cmake\bin\cmake.exe -SC:\Users\avazquez\Final-Project_CESE_Vazquez\WeatherStation_FP -BC:\Users\avazquez\Final-Project_CESE_Vazquez\WeatherStation_FP\.pio\build\esp32-c3-devkitc-02
   description = Re-running CMake...
   generator = 1
 

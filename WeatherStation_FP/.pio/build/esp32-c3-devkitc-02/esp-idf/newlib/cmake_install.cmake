@@ -34,6 +34,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/esp-idf/newlib/port/cmake_install.cmake")
+  include("C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/esp-idf/newlib/port/cmake_install.cmake")
 endif()
 

@@ -8,10 +8,10 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/include",
-                "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/src",
+                "C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/include",
+                "C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/src",
                 "C:/Users/avazquez/.platformio/packages/framework-espidf/components/riscv/include",
-                "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/config",
+                "C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/config",
                 "C:/Users/avazquez/.platformio/packages/framework-espidf/components/newlib/platform_include",
                 "C:/Users/avazquez/.platformio/packages/framework-espidf/components/freertos/config/include",
                 "C:/Users/avazquez/.platformio/packages/framework-espidf/components/freertos/config/include/freertos",
@@ -166,10 +166,10 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/include",
-                    "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/src",
+                    "C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/include",
+                    "C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/src",
                     "C:/Users/avazquez/.platformio/packages/framework-espidf/components/riscv/include",
-                    "C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/config",
+                    "C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/.pio/build/esp32-c3-devkitc-02/config",
                     "C:/Users/avazquez/.platformio/packages/framework-espidf/components/newlib/platform_include",
                     "C:/Users/avazquez/.platformio/packages/framework-espidf/components/freertos/config/include",
                     "C:/Users/avazquez/.platformio/packages/framework-espidf/components/freertos/config/include/freertos",

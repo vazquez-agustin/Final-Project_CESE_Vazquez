@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/avazquez/OneDrive/Escritorio/Final-Project_CESE_Vazquez/WeatherStation_FP/src
+# Install script for directory: C:/Users/avazquez/Final-Project_CESE_Vazquez/WeatherStation_FP/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
