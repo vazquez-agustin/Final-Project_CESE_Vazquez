@@ -85,10 +85,10 @@ extern "C" void app_main() {
     SoilMoistureSensor soilSensor(soil_sensor_channel);
 
     while (true) {
-        // Lee el porcentaje de humedad
+        // Read the moisture level
         uint32_t moisture_percentage = soilSensor.readMoisturePercentage();
         ESP_LOGI(TAG, "Soil moisture level: %lu%%", (unsigned long)moisture_percentage);
-        vTaskDelay(1000 / portTICK_PERIOD_MS); // Espera 1 segundo
+        vTaskDelay(1000 / portTICK_PERIOD_MS); // 1s
     }
 
 }
