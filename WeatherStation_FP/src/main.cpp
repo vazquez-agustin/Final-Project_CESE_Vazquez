@@ -12,7 +12,7 @@ private:
 public:
     // Variables
     const int maxADCValue = 4095; // Max ADV value of soil moisture
-    const int refVoltage = 1100;  //With adc2_vref_to_gpio() I could obtain a better estimate
+    const int refVoltage = 1100;  // With adc2_vref_to_gpio() I could obtain a better estimate
     // Constructor
     ADC(adc1_channel_t _channel, adc_unit_t _unit = ADC_UNIT_1, adc_atten_t _attenuation = ADC_ATTEN_DB_11)
         : channel(_channel), unit(_unit), attenuation(_attenuation) {
