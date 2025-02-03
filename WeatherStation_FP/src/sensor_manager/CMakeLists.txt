@@ -10,3 +10,4 @@ target_include_directories(SensorManager PUBLIC ${CMAKE_SOURCE_DIR}/external_int
 
 # Specify dependencies
 target_link_libraries(SensorManager PRIVATE Sensors ExternalInterface)
+target_include_directories(${COMPONENT_TARGET} PUBLIC .)
