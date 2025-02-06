@@ -1,5 +1,6 @@
 # Crear la biblioteca ExternalInterface
 add_library(ExternalInterface ADC.cpp)
+add_library(ExternalInterface WiFi.cpp)
 
 # Incluir directorios de encabezados
 target_include_directories(ExternalInterface PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
