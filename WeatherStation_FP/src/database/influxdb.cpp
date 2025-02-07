@@ -11,7 +11,7 @@ void InfluxDBClient::send_data(uint32_t moisture_value) {
     std::string post_data = "humedad,location=office value=" + std::to_string(moisture_value);
 
     // Construcción de la URL
-    std::string url = std::string(INFLUXDB_URL) + "?org=" + INFLUXDB_ORG + "&bucket=" + INFLUXDB_BUCKET + "&precision=s";
+    std::string url = "http://192.168.178.129:8086/api/v2/write?org=stationtest&bucket=measurements&precision=s";
 
     esp_http_client_config_t config = {};
     config.url = url.c_str();
