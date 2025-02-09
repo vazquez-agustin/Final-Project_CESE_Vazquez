@@ -1,5 +1,5 @@
 # Create the sensors library with the source files
-add_library(SoilMosture soil_moisture.cpp)
+add_library(SoilMoisture soil_moisture.cpp)
 
 target_include_directories(SoilMoisture PUBLIC "./")
 

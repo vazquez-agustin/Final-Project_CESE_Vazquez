@@ -1,5 +1,5 @@
 # Create the SensorManager library
-add_library(SensorManager manager.cpp)
+add_library(SensorManager sensor_manager.cpp)
 
 # Add sensors subdirectory
 add_subdirectory(sensors)

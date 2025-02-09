@@ -1,9 +1,6 @@
 #include "soil_moisture.h"
 #include "ADC.h"
 
-static const char* TAG = "SoilMoisture";
-
-
 SoilMoistureSensor::SoilMoistureSensor(adc1_channel_t channel) {
     adc = new ADC(channel);
     adc->adcSetup();

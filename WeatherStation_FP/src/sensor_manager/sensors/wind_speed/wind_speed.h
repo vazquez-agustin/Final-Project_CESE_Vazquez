@@ -5,7 +5,6 @@
 
 class WindSpeed {
 public:
-    WindSpeed();
     void readSpeed();
 };
 

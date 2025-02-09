@@ -2,6 +2,7 @@
 #include "soil_moisture.h"
 #include "WiFi.h"
 #include "influxdb.h"
+#include "sensor_manager.h"
 
 extern "C" void app_main() {
     printf("¡Hola Mundo! ESP32-C3 está funcionando\n");
@@ -20,14 +21,6 @@ extern "C" void app_main() {
     // Creates an InfluxDB client
     InfluxDBClient influxClient;
 
-    while (true) {
-        // Reads the soil moisture sensor
-        uint32_t moisture_percentage = soilSensor.readPercentage();
-
-        ESP_LOGI("Soil Moisture", "Soil moisture level: %lu%%", (unsigned long)moisture_percentage);
-
-        influxClient.send_data(moisture_percentage);
-
-        vTaskDelay(pdMS_TO_TICKS(5000));
-    }
+    SensorManager manager;
+    manager.sensorsRun();
 }

@@ -1,5 +1,5 @@
 #include "wind_speed.h"
 
-WindSpeed::WindSpeed() : Sensor("Wind Speed", "m/s") {
-    // Initialize the sensor
+void WindSpeed::readSpeed() {
+    std::cout << "Hola, soy el sensor de viento funcionando" << std::endl;
 }
