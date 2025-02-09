@@ -1,5 +1,6 @@
 # Create the sensors library with the source files
 add_library(SensorSrc soil_moisture.cpp)
+add_library(SensorSrc wind_speed.cpp)
 
 # Include the header directory
 target_include_directories(SensorSrc PUBLIC ../include)

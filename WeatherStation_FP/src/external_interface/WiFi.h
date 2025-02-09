@@ -1,6 +1,7 @@
 #ifndef WIFI_H
 #define WIFI_H
 
+#include "parameters.h"
 #include <cstring>
 #include "esp_wifi.h"
 #include "esp_event.h"

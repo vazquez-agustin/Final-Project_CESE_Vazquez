@@ -10,7 +10,8 @@
 	],
 	"settings": {
 		"files.associations": {
-			"cstring": "cpp"
+			"cstring": "cpp",
+			"cstdint": "cpp"
 		}
 	}
 }

@@ -8,14 +8,16 @@ idf_component_register(
         "main.cpp"
         "API/API.cpp"
         "database/influxdb.cpp"
-        "sensor_manager/manager.cpp"
+        "sensor_manager/sensor_manager.cpp"
         "sensor_manager/sensors/soil_mosture/soil_moisture.cpp"
+        "sensor_manager/sensors/wind_speed/wind_speed.cpp"
         "external_interface/ADC.cpp"
         "external_interface/WiFi.cpp"
     INCLUDE_DIRS 
         "."
         "API"
         "sensor_manager"
-        "sensor_manager/sensors/soil_mosture"
+        "sensor_manager/sensors/soil_moisture"
+        "sensor_manager/sensors/wind_speed"
         "external_interface"
 )

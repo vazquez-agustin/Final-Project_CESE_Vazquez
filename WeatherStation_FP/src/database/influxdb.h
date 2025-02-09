@@ -1,9 +1,11 @@
 #ifndef INFLUXDB_H
 #define INFLUXDB_H
 
+#include "parameters.h"
 #include "esp_http_client.h"
 #include "esp_log.h"
 #include <cstring>
+#include <string>
 
 class InfluxDBClient {
 public:
