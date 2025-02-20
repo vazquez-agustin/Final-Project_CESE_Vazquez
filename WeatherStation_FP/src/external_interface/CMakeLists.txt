@@ -1,9 +1,7 @@
-# Crear la biblioteca ExternalInterface
-add_library(ExternalInterface ADC.cpp)
-add_library(ExternalInterface WiFi.cpp)
+# Create the ExternalInterface library and add the source files
+add_library(ExternalInterface ADC.cpp WiFi.cpp)
 
-# Incluir directorios de encabezados
+# Include directories
 target_include_directories(ExternalInterface PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Permitir que sensor_manager use esta biblioteca
-target_link_libraries(ExternalInterface PUBLIC)
+# When needed I can link dependencies below here

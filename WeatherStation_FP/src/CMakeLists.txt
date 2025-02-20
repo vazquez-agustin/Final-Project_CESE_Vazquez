@@ -20,4 +20,5 @@ idf_component_register(
         "sensor_manager/sensors/soil_moisture"
         "sensor_manager/sensors/wind_speed"
         "external_interface"
+        "database"
 )

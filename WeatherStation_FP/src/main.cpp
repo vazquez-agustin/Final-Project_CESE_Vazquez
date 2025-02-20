@@ -4,6 +4,7 @@
 #include "influxdb.h"
 #include "sensor_manager.h"
 
+
 extern "C" void app_main() {
     printf("¡Hola Mundo! ESP32-C3 está funcionando\n");
 

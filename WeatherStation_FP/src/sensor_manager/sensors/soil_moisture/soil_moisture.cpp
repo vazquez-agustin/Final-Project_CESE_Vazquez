@@ -8,7 +8,7 @@ SoilMoistureSensor::SoilMoistureSensor(adc1_channel_t channel) {
 
 uint32_t SoilMoistureSensor::readPercentage() {
     uint32_t raw_value = adc->readRaw();
-    return (raw_value * 100) / adc->maxADCValue;
+    return (raw_value * 100) / adc->MAX_ADC_VALUE;
 }
 
 SoilMoistureSensor::~SoilMoistureSensor() {
