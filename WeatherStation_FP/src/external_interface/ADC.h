@@ -22,7 +22,7 @@ public:
     const int maxADCValue = 4095;
     const int refVoltage = 1100;
 
-    ADC(adc1_channel_t _channel, adc_unit_t _unit = ADC_UNIT_1, adc_atten_t _attenuation = ADC_ATTEN_DB_11);
+    ADC(adc1_channel_t _channel, adc_unit_t _unit = ADC_UNIT_1, adc_atten_t _attenuation = ADC_ATTEN_DB_12);
     ~ADC();
     
     void adcSetup();

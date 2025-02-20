@@ -5,7 +5,7 @@ void InfluxDBClient::send_data(uint32_t moisture_value) {
     std::string post_data = "humedad,location=office value=" + std::to_string(moisture_value);
 
     // InfluxDB URL
-    std::string url = "http://192.168.178.129:8086/api/v2/write?org=stationtest&bucket=measurements&precision=s";
+    std::string url = INFLUXDB_URL;
 
     esp_http_client_config_t config = {};
     config.url = url.c_str();
@@ -30,8 +30,23 @@ void InfluxDBClient::send_data(uint32_t moisture_value) {
 
 esp_err_t InfluxDBClient::http_event_handler(esp_http_client_event_t *evt) {
     switch (evt->event_id) {
+        case HTTP_EVENT_ERROR:
+            ESP_LOGE("InfluxDB", "HTTP Event Error");
+            break;
+        case HTTP_EVENT_ON_CONNECTED:
+            ESP_LOGI("InfluxDB", "Connected to InfluxDB");
+            break;
+        case HTTP_EVENT_HEADER_SENT:
+            ESP_LOGI("InfluxDB", "Headers sent");
+            break;
         case HTTP_EVENT_ON_DATA:
-            ESP_LOGI("InfluxDB", "Datos recibidos: %.*s", evt->data_len, (char *)evt->data);
+            ESP_LOGI("InfluxDB", "Data received: %.*s", evt->data_len, (char *)evt->data);
+            break;
+        case HTTP_EVENT_ON_FINISH:
+            ESP_LOGI("InfluxDB", "HTTP request finished");
+            break;
+        case HTTP_EVENT_DISCONNECTED:
+            ESP_LOGI("InfluxDB", "Disconnected from InfluxDB");
             break;
         default:
             break;
