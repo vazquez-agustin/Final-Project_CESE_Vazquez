@@ -1,6 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include "soil_moisture.h"
+#include "WiFi.h"
+#include "influxdb.h"
+#include "sensor_manager.h"
+#include "parameters.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>

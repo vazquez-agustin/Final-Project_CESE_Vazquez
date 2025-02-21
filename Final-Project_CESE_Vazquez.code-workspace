@@ -11,7 +11,9 @@
 	"settings": {
 		"files.associations": {
 			"cstring": "cpp",
-			"cstdint": "cpp"
+			"cstdint": "cpp",
+			"string": "cpp",
+			"format": "cpp"
 		}
 	}
 }
