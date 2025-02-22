@@ -1,9 +1,10 @@
-# Create the sensors library with the source files
 add_library(WindSpeed wind_speed.cpp)
 
-target_include_directories(WindSpeed PUBLIC "./")
+# Include the current directory and external_interface for ADC
+target_include_directories(WindSpeed PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ../../external_interface)
 
-# Link with the Sensors library
-target_link_libraries(WindSpeed Sensors)
+# Link SoilMoisture with ExternalInterface (for ADC functionality)
+target_link_libraries(WindSpeed ExternalInterface)
 
-target_include_directories(${COMPONENT_TARGET} PUBLIC .)
+
+#target_include_directories(Sensors PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

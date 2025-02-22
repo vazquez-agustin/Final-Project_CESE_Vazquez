@@ -3,6 +3,12 @@
 SensorManager::SensorManager() 
     : soilSensor(ADC1_CHANNEL_0), windSensor() {}
 
+void SensorManager::dbConnection() {
+    ESP_ERROR_CHECK(nvs_flash_init());
+    wifi.initialization(WIFI_SSID, WIFI_PASS);
+    ESP_LOGI("WiFi", "Esperando conexión WiFi...");
+}
+
 void SensorManager::sensorsRun() {
     while (true) {
         // Leer sensores

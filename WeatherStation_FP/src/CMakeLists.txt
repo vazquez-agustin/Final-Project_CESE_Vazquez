@@ -1,6 +1,3 @@
-# This file was automatically generated for projects
-# without default 'CMakeLists.txt' file.
-
 FILE(GLOB_RECURSE app_sources ${CMAKE_SOURCE_DIR}/src/*.*)
 
 idf_component_register(
@@ -13,10 +10,12 @@ idf_component_register(
         "sensor_manager/sensors/wind_speed/wind_speed.cpp"
         "external_interface/ADC.cpp"
         "external_interface/WiFi.cpp"
+
     INCLUDE_DIRS 
         "."
         "API"
         "sensor_manager"
+        "sensor_manager/sensors"
         "sensor_manager/sensors/soil_moisture"
         "sensor_manager/sensors/wind_speed"
         "external_interface"

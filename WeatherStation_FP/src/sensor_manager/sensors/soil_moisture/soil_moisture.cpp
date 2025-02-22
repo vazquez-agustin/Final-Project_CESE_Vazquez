@@ -1,5 +1,4 @@
 #include "soil_moisture.h"
-#include "ADC.h"
 
 SoilMoistureSensor::SoilMoistureSensor(adc1_channel_t channel) {
     adc = new ADC(channel);

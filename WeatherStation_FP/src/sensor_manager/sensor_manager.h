@@ -5,16 +5,19 @@
 #include "wind_speed.h"
 #include "WiFi.h"
 #include "influxdb.h"
+#include "parameters.h"
 
 class SensorManager {
 public:
     SensorManager();
+    void dbConnection();
     void sensorsRun();
 
 private:
+    InfluxDBClient influxClient;
+    WiFiManager wifi;
     SoilMoistureSensor soilSensor;
     WindSpeed windSensor;
-    InfluxDBClient influxClient;
 };
 
 #endif // SENSOR_MANAGER_H

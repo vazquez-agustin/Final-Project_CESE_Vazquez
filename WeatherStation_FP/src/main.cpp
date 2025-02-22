@@ -3,12 +3,11 @@
 extern "C" void app_main() {
     printf("¡Hola Mundo! ESP32-C3 está funcionando\n");
 
-    ESP_ERROR_CHECK(nvs_flash_init());
-    WiFiManager wifi;
-    wifi.initialization(WIFI_SSID, WIFI_PASS);
+    //ESP_ERROR_CHECK(nvs_flash_init());
+    //WiFiManager wifi;
+    //wifi.initialization(WIFI_SSID, WIFI_PASS);
 
-    ESP_LOGI("WiFi", "Esperando conexión WiFi...");
-    vTaskDelay(pdMS_TO_TICKS(5000));
+    //ESP_LOGI("WiFi", "Esperando conexión WiFi...");
 
     // Creates a task that will read the soil moisture sensor and send the data to InfluxDB
     //adc1_channel_t soil_sensor_channel = ADC1_CHANNEL_0;
@@ -18,5 +17,6 @@ extern "C" void app_main() {
     //InfluxDBClient influxClient;
 
     SensorManager manager;
+    manager.dbConnection();
     manager.sensorsRun();
 }
