@@ -1,0 +1,9 @@
+#ifndef PARAMETERS_H
+#define PARAMETERS_H
+
+#define INFLUXDB_URL 
+#define INFLUXDB_TOKEN
+#define WIFI_SSID 
+#define WIFI_PASS
+
+#endif // PARAMETERS_H

@@ -8,5 +8,12 @@
 			"path": "WeatherStation_FP"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"cstring": "cpp",
+			"cstdint": "cpp",
+			"string": "cpp",
+			"format": "cpp"
+		}
+	}
 }

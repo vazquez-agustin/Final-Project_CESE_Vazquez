@@ -1,13 +1,5 @@
-# Create the SensorManager library
-add_library(SensorManager manager.cpp)
+add_library(SensorManager STATIC sensor_manager.cpp)
 
-# Add sensors subdirectory
-add_subdirectory(sensors)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external_interface) # Add external_interface subdirectory
+target_include_directories(SensorManager PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} sensors)
 
-# Ensure SensorManager can find external_interface headers
-target_include_directories(SensorManager PUBLIC ${CMAKE_SOURCE_DIR}/external_interface)
-
-# Specify dependencies
-target_link_libraries(SensorManager PRIVATE Sensors ExternalInterface)
-target_include_directories(${COMPONENT_TARGET} PUBLIC .)
+target_link_libraries(SensorManager Sensors)
