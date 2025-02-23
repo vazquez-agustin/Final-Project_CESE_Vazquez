@@ -3,25 +3,18 @@
 SensorManager::SensorManager() 
     : soilSensor(ADC1_CHANNEL_0), windSensor() {}
 
-void SensorManager::dbConnection() {
-    ESP_ERROR_CHECK(nvs_flash_init());
-    wifi.initialization(WIFI_SSID, WIFI_PASS);
-    ESP_LOGI("WiFi", "Esperando conexión WiFi...");
-}
-
 void SensorManager::sensorsRun() {
     while (true) {
-        // Leer sensores
+        // Read sensor data
         uint32_t moisture_percentage = soilSensor.readPercentage();
         windSensor.readSpeed();
 
-        // Log de datos
         ESP_LOGI("SensorManager", "Soil moisture: %lu%%", (unsigned long)moisture_percentage);
+        // LOG_INFO("Wind speed: %f m/s", windSensor.getSpeed());
 
-        // Enviar datos a InfluxDB
         influxClient.send_data(moisture_percentage);
+        // influxClient.send_data(windSensor.getSpeed());
 
-        // Esperar antes de la siguiente medición
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
 }
