@@ -3,10 +3,17 @@
 
 #include "ADC.h"
 #include <iostream>
+#include <stdint.h>
+#include "driver/adc.h"
 
-class WindSpeed {
+class WindSpeedSensor {
+private:
+    ADC *adc;
+
 public:
-    void readSpeed();
+    WindSpeedSensor(adc1_channel_t channel);
+    uint32_t getSpeed();
+    ~WindSpeedSensor();
 };
 
 #endif // WIND_SPEED_H

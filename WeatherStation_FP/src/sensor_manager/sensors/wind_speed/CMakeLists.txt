@@ -5,6 +5,3 @@ target_include_directories(WindSpeed PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ../../ex
 
 # Link SoilMoisture with ExternalInterface (for ADC functionality)
 target_link_libraries(WindSpeed ExternalInterface)
-
-
-#target_include_directories(Sensors PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

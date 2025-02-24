@@ -9,7 +9,7 @@
 
 class InfluxDBClient {
 public:
-    void send_data(uint32_t moisture_value);
+    void send_data(uint32_t moisture_value, uint32_t speed_value);
 
 private:
     static esp_err_t http_event_handler(esp_http_client_event_t *evt);

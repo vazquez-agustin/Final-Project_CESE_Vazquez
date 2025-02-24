@@ -1,8 +1,10 @@
 #include "influxdb.h"
 
-void InfluxDBClient::send_data(uint32_t moisture_value) {
+void InfluxDBClient::send_data(uint32_t moisture_value, uint32_t speed_value) {
     // Here you build the string with the data to send to InfluxDB
-    std::string post_data = "humedad,location=office value=" + std::to_string(moisture_value);
+    std::string post_data = "humedad_de_suelo,location=garden value=" + std::to_string(moisture_value) + "\n" +
+                            "velocidad_de_viento,location=outside value=" + std::to_string(speed_value);
+
 
     // InfluxDB URL
     std::string url = INFLUXDB_URL;

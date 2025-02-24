@@ -16,8 +16,8 @@ public:
 private:
     InfluxDBClient influxClient;
     //WiFiManager wifi;
-    SoilMoistureSensor soilSensor;
-    WindSpeed windSensor;
+    SoilMoistureSensor soilMoistureSensor;
+    WindSpeedSensor windSpeedSensor;
 };
 
 #endif // SENSOR_MANAGER_H

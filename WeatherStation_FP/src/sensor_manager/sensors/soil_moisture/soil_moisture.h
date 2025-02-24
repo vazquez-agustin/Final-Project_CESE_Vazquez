@@ -1,9 +1,9 @@
 #ifndef SOIL_MOISTURE_H
 #define SOIL_MOISTURE_H
 
+#include "ADC.h"
 #include <stdint.h>
 #include "driver/adc.h"
-#include "ADC.h"
 
 class SoilMoistureSensor {
 private:
