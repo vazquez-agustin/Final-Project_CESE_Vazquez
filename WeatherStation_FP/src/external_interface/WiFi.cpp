@@ -33,9 +33,11 @@ void WiFiManager::handle_event(esp_event_base_t event_base, int32_t event_id, vo
         esp_wifi_connect();
     } else if (event_id == WIFI_EVENT_STA_DISCONNECTED) {
         ESP_LOGE("WiFiManager", "WiFi desconectado. Reintentando...");
+        connected = false; // Conexión fallida
         esp_wifi_connect();
     } else if (event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
+        connected = true; // Conexión exitosa
         ESP_LOGI("WiFiManager", "WiFi conectado. Dirección IP: " IPSTR, IP2STR(&event->ip_info.ip));
     }
 }

@@ -10,12 +10,14 @@
 class SensorManager {
 public:
     SensorManager();
-    //void dbConnection();
+
     void sensorsRun();
+    void initWiFi();
+    void initInfluxDB();
 
 private:
     InfluxDBClient influxClient;
-    //WiFiManager wifi;
+    WiFiManager WiFi;
     SoilMoistureSensor soilMoistureSensor;
     WindSpeedSensor windSpeedSensor;
 };
