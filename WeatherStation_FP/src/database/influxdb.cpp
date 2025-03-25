@@ -1,10 +1,64 @@
+/************************************************************************************************
+ * 
+ *  @author     Agustín Jesús Vazquez <vazqueza193@gmail.com>
+ *  @date       Marzo, 2025
+ *  @version    1.0
+ *
+ *  @license    MIT License
+ * 
+Copyright (c) 2025, Agustín Jesús Vazquez <vazqueza193@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+SPDX-License-Identifier: MIT
+*************************************************************************************************/
+
+/** @file  influxdb.cpp
+ ** @brief Implementación de la clase InfluxDBClient.
+ **/
+
+/* === Headers files inclusions ================================================================ */
 #include "influxdb.h"
+/* === Macros definitions ====================================================================== */
 
-void InfluxDBClient::send_data(uint32_t moisture_value) {
-    // Here you build the string with the data to send to InfluxDB
-    std::string post_data = "humedad,location=office value=" + std::to_string(moisture_value);
+/* === Private data type declarations ========================================================== */
 
-    // InfluxDB URL
+/* === Private variable declarations =========================================================== */
+
+/* === Private function declarations =========================================================== */
+
+/* === Public variable definitions ============================================================= */
+
+/* === Private variable definitions ============================================================ */
+
+/* === Private function implementation ========================================================= */
+
+/* === Public function implementation ========================================================== */
+
+/**
+ * @brief Envía datos de sensores hacia la base de datos InfluxDB.
+ * 
+ * @param moisture_value Valor numérico de la humedad del suelo (0-100%).
+ * @param speed_value Valor numérico de la velocidad del viento en m/s.
+ */
+void InfluxDBClient::send_data(uint32_t moisture_value, uint32_t speed_value) {
+    // String with the data to send to InfluxDB
+    std::string post_data = "humedad_de_suelo,location=garden value=" + std::to_string(moisture_value) + "\n" +
+                            "velocidad_de_viento,location=outside value=" + std::to_string(speed_value);
+
     std::string url = INFLUXDB_URL;
 
     esp_http_client_config_t config = {};
@@ -28,6 +82,13 @@ void InfluxDBClient::send_data(uint32_t moisture_value) {
     esp_http_client_cleanup(client);
 }
 
+/**
+ * @brief Manejador de eventos HTTP para el cliente de InfluxDB.
+ * 
+ * @param evt Puntero a la estructura que contiene información del evento HTTP.
+ * 
+ * @return Código de error ESP_OK tras procesar el evento.
+ */
 esp_err_t InfluxDBClient::http_event_handler(esp_http_client_event_t *evt) {
     switch (evt->event_id) {
         case HTTP_EVENT_ERROR:
