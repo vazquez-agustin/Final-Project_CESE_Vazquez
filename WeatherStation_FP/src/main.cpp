@@ -58,7 +58,7 @@ SPDX-License-Identifier: MIT
 void app_main()
 {
 
-    printf("¡Hola Mundo! ESP32-C3 está funcionando\n"); // Cambiar por un ESP-LOG
+    ESP_LOGI("Bienvenido","¡Hola Mundo! ESP32-C3 está funcionando\n"); 
 
     ESP_ERROR_CHECK(nvs_flash_init());
 

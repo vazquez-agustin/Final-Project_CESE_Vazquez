@@ -2,10 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"name": "WeatherStation_FP",
-			"path": "WeatherStation_FP"
 		}
 	],
 	"settings": {
