@@ -1,5 +1,13 @@
 /************************************************************************************************
+ *
+ *  @author     Agustín Jesús Vazquez <vazqueza193@gmail.com>
+ *  @date       Marzo, 2025
+ *  @version    1.0
+ *
+ *  @license    MIT License
+ *
 Copyright (c) 2025, Agustín Jesús Vazquez <vazqueza193@gmail.com>
+
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,38 +27,54 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-/** @file soil_moisture.cpp
+/** @file  soil_moisture.cpp
  ** @brief Implementación de la clase SoilMoistureSensor
  **/
 
-/* --- Headers files inclusions ---------------------------------------------------------------- */
+/* === Headers files inclusions ================================================================ */
 #include "soil_moisture.h"
-/* --- Macros definitions ---------------------------------------------------------------------- */
+/* === Macros definitions ====================================================================== */
 
-/* --- Private data type declarations ---------------------------------------------------------- */
+/* === Private data type declarations ========================================================== */
 
-/* --- Private variable declarations ----------------------------------------------------------- */
+/* === Private variable declarations =========================================================== */
 
-/* --- Private function declarations ----------------------------------------------------------- */
+/* === Private function declarations =========================================================== */
 
-/* --- Public variable definitions ------------------------------------------------------------- */
+/* === Public variable definitions ============================================================= */
 
-/* --- Private variable definitions ------------------------------------------------------------ */
+/* === Private variable definitions ============================================================ */
 
-/* --- Private function implementation --------------------------------------------------------- */
+/* === Private function implementation ========================================================= */
 
-/* --- Public function implementation ---------------------------------------------------------- */
+/* === Public function implementation ========================================================== */
 
-SoilMoistureSensor::SoilMoistureSensor(adc1_channel_t channel) {
+/**
+ * @brief Constructor de la clase SoilMoistureSensor.
+ *
+ * @param channel Canal ADC utilizado para medición.
+ */
+SoilMoistureSensor::SoilMoistureSensor(adc1_channel_t channel)
+{
     adc = new ADC(channel);
     adc->adcSetup();
 }
 
-uint32_t SoilMoistureSensor::readPercentage() {
+/**
+ * @brief  Obtiene el porcentaje de humedad actual del suelo.
+ *
+ * @return uint32_t Velocidad del viento en metros por segundo (m/s).
+ */
+uint32_t SoilMoistureSensor::readPercentage()
+{
     uint32_t raw_value = adc->readRaw();
     return (raw_value * 100) / adc->MAX_ADC_VALUE;
 }
 
-SoilMoistureSensor::~SoilMoistureSensor() {
+/**
+ * @brief Destructor de la clase SoilMoistureSensor.
+ */
+SoilMoistureSensor::~SoilMoistureSensor()
+{
     delete adc;
 }

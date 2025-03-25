@@ -1,5 +1,13 @@
 /************************************************************************************************
+ *
+ *  @author     Agustín Jesús Vazquez <vazqueza193@gmail.com>
+ *  @date       Marzo, 2025
+ *  @version    1.0
+ *
+ *  @license    MIT License
+ *
 Copyright (c) 2025, Agustín Jesús Vazquez <vazqueza193@gmail.com>
+
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,40 +27,56 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-/** @file wind_speed.cpp
+/** @file  wind_speed.cpp
  ** @brief Implementación de la clase WindSpeedSensor
  **/
 
-/* --- Headers files inclusions ---------------------------------------------------------------- */
+/* === Headers files inclusions ================================================================ */
 #include "wind_speed.h"
-/* --- Macros definitions ---------------------------------------------------------------------- */
+/* === Macros definitions ====================================================================== */
 
-/* --- Private data type declarations ---------------------------------------------------------- */
+/* === Private data type declarations ========================================================== */
 
-/* --- Private variable declarations ----------------------------------------------------------- */
+/* === Private variable declarations =========================================================== */
 
-/* --- Private function declarations ----------------------------------------------------------- */
+/* === Private function declarations =========================================================== */
 
-/* --- Public variable definitions ------------------------------------------------------------- */
+/* === Public variable definitions ============================================================= */
 
-/* --- Private variable definitions ------------------------------------------------------------ */
+/* === Private variable definitions ============================================================ */
 
-/* --- Private function implementation --------------------------------------------------------- */
+/* === Private function implementation ========================================================= */
 
-/* --- Public function implementation ---------------------------------------------------------- */
+/* === Public function implementation ========================================================== */
 
-WindSpeedSensor::WindSpeedSensor(adc1_channel_t channel) {
+/**
+ * @brief Constructor de la clase WindSpeedSensor.
+ *
+ * @param channel Canal ADC utilizado para medición.
+ */
+WindSpeedSensor::WindSpeedSensor(adc1_channel_t channel)
+{
     adc = new ADC(channel);
     adc->adcSetup();
 }
 
-uint32_t WindSpeedSensor::getSpeed() {
+/**
+ * @brief  Obtiene la velocidad del viento en m/s.
+ *
+ * @return uint32_t Porcentaje de humedad del suelo como un valor entero (0 - 100%).
+ */
+uint32_t WindSpeedSensor::getSpeed()
+{
     uint32_t raw_value = adc->readRaw();
-    float voltage = (raw_value * 3.3) / adc->MAX_ADC_VALUE; // 3.3V belongs to ESP32 max voltage for ADC
-    float speed_ms = (voltage / 3.3) * 30; // 0-3.3V to 0-30 m/s
+    float voltage = (raw_value * 3.3f) / adc->MAX_ADC_VALUE; // 3.3V belongs to ESP32 max voltage for ADC
+    float speed_ms = (voltage / 3.3f) * 30.0;                // 0-3.3V to 0-30 m/s
     return static_cast<uint32_t>(speed_ms);
 }
 
-WindSpeedSensor::~WindSpeedSensor() {
+/**
+ * @brief Destructor de la clase WindSpeedSensor.
+ */
+WindSpeedSensor::~WindSpeedSensor()
+{
     delete adc;
 }

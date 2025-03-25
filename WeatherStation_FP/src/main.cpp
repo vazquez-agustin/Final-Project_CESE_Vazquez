@@ -1,5 +1,13 @@
 /************************************************************************************************
+ *
+ *  @author     Agustín Jesús Vazquez <vazqueza193@gmail.com>
+ *  @date       Marzo, 2025
+ *  @version    1.0
+ *
+ *  @license    MIT License
+ *
 Copyright (c) 2025, Agustín Jesús Vazquez <vazqueza193@gmail.com>
+
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,31 +27,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-/** @file main.cpp
+/** @file  main.cpp
  ** @brief Archivo principal del programa
  **/
 
-/* --- Headers files inclusions ---------------------------------------------------------------- */
+/* === Headers files inclusions ================================================================ */
 #include "main.h"
-/* --- Macros definitions ---------------------------------------------------------------------- */
+/* === Macros definitions ====================================================================== */
 
-/* --- Private data type declarations ---------------------------------------------------------- */
+/* === Private data type declarations ========================================================== */
 
-/* --- Private variable declarations ----------------------------------------------------------- */
+/* === Private variable declarations =========================================================== */
 
-/* --- Private function declarations ----------------------------------------------------------- */
+/* === Private function declarations =========================================================== */
 
-/* --- Public variable definitions ------------------------------------------------------------- */
+/* === Public variable definitions ============================================================= */
 
-/* --- Private variable definitions ------------------------------------------------------------ */
+/* === Private variable definitions ============================================================ */
 
-/* --- Private function implementation --------------------------------------------------------- */
+/* === Private function implementation ========================================================= */
 
-/* --- Public function implementation ---------------------------------------------------------- */
+/* === Public function implementation ========================================================== */
 
-extern "C" void app_main() {
+/**
+ * @brief Función principal del firmware.
+ *
+ * Inicializa la memoria no volátil (NVS), configura la conexión Wi-Fi e inicia el bucle
+ * de medición y transmisión continua de los datos recolectados por la estación meteorológica.
+ */
+void app_main()
+{
 
-    printf("¡Hola Mundo! ESP32-C3 está funcionando\n");
+    printf("¡Hola Mundo! ESP32-C3 está funcionando\n"); // Cambiar por un ESP-LOG
 
     ESP_ERROR_CHECK(nvs_flash_init());
 

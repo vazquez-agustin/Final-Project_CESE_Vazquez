@@ -1,5 +1,13 @@
 /************************************************************************************************
+ *
+ *  @author     Agustín Jesús Vazquez <vazqueza193@gmail.com>
+ *  @date       Marzo, 2025
+ *  @version    1.0
+ *
+ *  @license    MIT License
+ *
 Copyright (c) 2025, Agustín Jesús Vazquez <vazqueza193@gmail.com>
+
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,49 +27,60 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-/** @file sensor_manager.cpp
+/** @file  sensor_manager.cpp
  ** @brief Implementación de la clase SensorManager
  **/
 
-/* --- Headers files inclusions ---------------------------------------------------------------- */
+/* === Headers files inclusions ================================================================ */
 #include "sensor_manager.h"
-/* --- Macros definitions ---------------------------------------------------------------------- */
+/* === Macros definitions ====================================================================== */
 
-/* --- Private data type declarations ---------------------------------------------------------- */
+/* === Private data type declarations ========================================================== */
 
-/* --- Private variable declarations ----------------------------------------------------------- */
+/* === Private variable declarations =========================================================== */
 
-/* --- Private function declarations ----------------------------------------------------------- */
+/* === Private function declarations =========================================================== */
 
-/* --- Public variable definitions ------------------------------------------------------------- */
+/* === Public variable definitions ============================================================= */
 
-/* --- Private variable definitions ------------------------------------------------------------ */
+/* === Private variable definitions ============================================================ */
 
-/* --- Private function implementation --------------------------------------------------------- */
+/* === Private function implementation ========================================================= */
 
-/* --- Public function implementation ---------------------------------------------------------- */
+/* === Public function implementation ========================================================== */
 
-SensorManager::SensorManager() 
-    : soilMoistureSensor(ADC1_CHANNEL_0)
-    , windSpeedSensor(ADC1_CHANNEL_1) {}
+/**
+ * @brief Constructor por defecto de SensorManager.
+ */
+SensorManager::SensorManager()
+    : soilMoistureSensor(ADC1_CHANNEL_0), windSpeedSensor(ADC1_CHANNEL_1) {}
 
-void SensorManager::initWiFi() {
-    
+/**
+ * @brief Inicializa y establece la conexión Wi-Fi con el punto de acceso especificado.
+ */
+void SensorManager::initWiFi()
+{
+
     WiFi.initialization(WIFI_SSID, WIFI_PASS);
     ESP_LOGI("WiFi", "Esperando conexión WiFi...");
 
-    // Bucle de espera: revisa cada 100 ms si ya se conectó
-    while (!WiFi.isConnected()) {
+    while (!WiFi.isConnected())
+    {
         vTaskDelay(pdMS_TO_TICKS(100));
     }
-    
+
     ESP_LOGI("WiFi", "Conexión WiFi establecida.");
 }
-    
 
-void SensorManager::sensorsRun() {
-    while (true) {
-        // Read sensor data
+/**
+ * @brief Ejecuta el ciclo continuo de lecturas de sensores y transmisión a InfluxDB.
+ *
+ * @note Esta función corre en un bucle infinito; debería ejecutarse como una tarea separada.
+ */
+void SensorManager::sensorsRun()
+{
+    while (true)
+    {
         uint32_t moisture_percentage = soilMoistureSensor.readPercentage();
         uint32_t speed_velocity = windSpeedSensor.getSpeed();
 

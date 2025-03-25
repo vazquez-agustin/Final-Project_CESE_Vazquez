@@ -1,4 +1,11 @@
 /************************************************************************************************
+ *
+ *  @author     Agustín Jesús Vazquez <vazqueza193@gmail.com>
+ *  @date       Marzo, 2025
+ *  @version    1.0
+ *
+ *  @license    MIT License
+ *
 Copyright (c) 2025, Agustín Jesús Vazquez <vazqueza193@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -22,8 +29,8 @@ SPDX-License-Identifier: MIT
 #ifndef MAIN_H
 #define MAIN_H
 
-/** @file main.h
- ** @brief Declaración de la función principal del programa
+/** @file    main.h
+ ** @brief   Declaración de la función principal del programa.
  **/
 
 /* === Headers files inclusions ================================================================ */
@@ -40,11 +47,6 @@ SPDX-License-Identifier: MIT
 #include "esp_system.h"
 #include "esp_log.h"
 #include "esp_err.h"
-/* === Cabecera C++ ============================================================================ */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* === Public macros definitions =============================================================== */
 
@@ -54,11 +56,18 @@ extern "C" {
 
 /* === Public function declarations ============================================================ */
 
+/* === C++ header ============================================================================== */
 
-/* === End of documentation ==================================================================== */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void app_main();
 
 #ifdef __cplusplus
 }
 #endif
+
+/* === End of documentation ==================================================================== */
 
 #endif // MAIN_H
