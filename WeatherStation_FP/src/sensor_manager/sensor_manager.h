@@ -65,9 +65,11 @@ private:
     SoilMoistureSensor soilMoistureSensor;
     /** @brief Instancia del sensor de velocidad de viento. */
     WindSpeedSensor windSpeedSensor;
+    /** @brief Instancia del sensor de dirección de viento. */
+    WindDirectionSensor windDirectionSensor;
     /** @brief Instancia del sensor BME680. */
     BME680 bme680;
-
+    
 public:
     /**
      * @brief Constructor por defecto de SensorManager.
