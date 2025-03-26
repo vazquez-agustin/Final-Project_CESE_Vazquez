@@ -40,6 +40,8 @@ SPDX-License-Identifier: MIT
 #include "soil_moisture.h"
 #include "wind_speed.h"
 #include "BME680.h"
+#include "wind_direction.h"
+
 /* === Public macros definitions =============================================================== */
 
 /* === Public data type declarations =========================================================== */
