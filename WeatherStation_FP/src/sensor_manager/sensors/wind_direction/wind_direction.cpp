@@ -32,26 +32,40 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
-
 #include "wind_direction.h"
-
+#include <cmath>
 /* === Macros definitions ====================================================================== */
 
 /* === Private data type declarations ========================================================== */
+/** @brief Definición del voltaje de referencia para la conversión del ADC. */
+static const float ADC_REF_VOLTAGE = 5.0f;
 
+static const WindDirectionMapping directionTable[] = {
+    {0.4f,   0},   // N
+    {1.1f,  45},   // NE
+    {1.8f,  90},   // E
+    {2.5f, 135},   // SE
+    {3.2f, 180},   // S
+    {3.9f, 225},   // SW
+    {4.6f, 270},   // W
+    {5.0f, 315}    // NW
+};
 /* === Private variable declarations =========================================================== */
 
 /* === Private function declarations =========================================================== */
 
 /* === Public variable definitions ============================================================= */
-
+struct WindDirectionMapping {
+    float voltage;
+    uint16_t angle;
+};
 /* === Private variable definitions ============================================================ */
 
 /* === Private function implementation ========================================================= */
 
 /* === Public function implementation ========================================================== */
 
-WindDirectionSensor::WindVaneSensor(adc1_channel_t channel)
+WindDirectionSensor::WindDirectionSensor(adc1_channel_t channel)
 {
     adc = new ADC(channel);
     adc->adcSetup();
@@ -59,14 +73,22 @@ WindDirectionSensor::WindVaneSensor(adc1_channel_t channel)
 
 uint16_t WindDirectionSensor::getDirection()
 {
-    uint32_t raw = adc->readRaw();
-    float voltage = (raw * 3.3f) / adc->MAX_ADC_VALUE;
+   uint32_t rawValue = adc->readRaw();
 
-    // Convertimos de voltaje (0-3.3V) a ángulo (0-360°)
-    // Esto es lineal. Algunos sensores usan posiciones discretas → ver más abajo.
-    float angle = (voltage / 3.3f) * 360.0f;
+   float voltage = (rawValue * ADC_REF_VOLTAGE) / adc->MAX_ADC_VALUE;
 
-    return static_cast<uint16_t>(angle);
+   float minDiff = 1000.0f;
+   uint16_t bestAngle = 0;
+
+   for (auto &entry : directionTable) {
+       float diff = std::fabs(voltage - entry.voltage);
+       if (diff < minDiff) {
+           minDiff = diff;
+           bestAngle = entry.angle;
+       }
+   }
+
+   return bestAngle;
 }
 
 WindDirectionSensor::~WindDirectionSensor()
