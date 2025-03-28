@@ -185,7 +185,7 @@ uint32_t read_raw_pressure(void)
 
 uint16_t read_raw_humidity(void)
 {
-    uint8_t hum_msb = 0, hum_lsb = 0;
+    uint8_t hum_msb, hum_lsb;
     if (i2c_read_register(0x25, &hum_msb) != ESP_OK) return 0;
     if (i2c_read_register(0x26, &hum_lsb) != ESP_OK) return 0;
     
@@ -254,12 +254,12 @@ void read_p_calibration_data()
 
 void read_h_calibration_data(void)
 {
-    uint8_t buf;
+    uint8_t buf_E2, buf_E7;
     
     // Leer H1: 0xE2 (bits 3:0) y 0xE3 (8 bits)
     uint8_t h1_low, h1_high;
-    i2c_read_register(0xE2, &buf);
-    h1_low = buf & 0x0F;  // bits [3:0]
+    i2c_read_register(0xE2, &buf_E2);
+    h1_low = buf_E2 & 0x0F;  // bits [3:0]
     i2c_read_register(0xE3, &h1_high);
     H1 = (h1_high << 4) | h1_low;
     
@@ -267,16 +267,18 @@ void read_h_calibration_data(void)
     uint8_t h2_high, h2_low;
     i2c_read_register(0xE1, &h2_high);
     // Releer 0xE2 para obtener la parte alta
-    i2c_read_register(0xE2, &buf);
-    h2_low = (buf >> 4) & 0x0F;
+    //i2c_read_register(0xE2, &buf);
+    h2_low = (buf_E2 >> 4) & 0x0F;
     H2 = (int16_t)((h2_high << 4) | h2_low);
+    if (H2 > 2047)
+        H2 -= 4096;
     
     // Leer H3 a H7 (cada uno en un registro)
     i2c_read_register(0xE4, (uint8_t *)&H3);
     i2c_read_register(0xE5, (uint8_t *)&H4);
     i2c_read_register(0xE6, (uint8_t *)&H5);
-    i2c_read_register(0xE7, &buf);
-    H6 = buf;
+    i2c_read_register(0xE7, &buf_E7);
+    H6 = buf_E7;
     i2c_read_register(0xE8, (uint8_t *)&H7);
     
     ESP_LOGI(TAG, "Humidity Calibration: H1=%u, H2=%d, H3=%d, H4=%d, H5=%d, H6=%u, H7=%d",
@@ -334,12 +336,11 @@ float compensate_humidity(uint16_t hum_adc, float temp_comp)
 {
     float var1, var2, var3, var4, hum_comp;
     
-    var1 = (float)hum_adc - (((float)H1 * 16.0f) + (((float)H3 / 2.0f) * temp_comp));
-    var2 = var1 * (((float)H2 / 262144.0f) *
-            (1.0f + (((float)H4 / 16384.0f) * temp_comp) +
-            (((float)H5 / 1048576.0f) * temp_comp * temp_comp)));
-    var3 = (float)H6 / 16384.0f;
-    var4 = (float)H7 / 2097152.0f;
+    var1 = hum_adc - (((double)H1 * 16.0) + (((double)H3 / 2.0) * temp_comp));
+    var2 = var1 * (((double)H2 / 262144.0) * (1.0 + (((double)H4 / 16384.0) * 
+            temp_comp) + (((double)H5 / 1048576.0) * temp_comp * temp_comp)));
+    var3 = (double)H6 / 16384.0;
+    var4 = (double)H7 / 2097152.0;
     hum_comp = var2 + ((var3 + (var4 * temp_comp)) * var2 * var2);
     
     return hum_comp;  // valor en % r.H.
