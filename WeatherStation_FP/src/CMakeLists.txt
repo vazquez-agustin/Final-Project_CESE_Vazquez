@@ -8,6 +8,7 @@ idf_component_register(
         "sensor_manager/sensor_manager.cpp"
         "sensor_manager/sensors/soil_moisture/soil_moisture.cpp"
         "sensor_manager/sensors/wind_speed/wind_speed.cpp"
+        "external_interface/I2C.cpp"
         "external_interface/ADC.cpp"
         "external_interface/WiFi.cpp"
 
