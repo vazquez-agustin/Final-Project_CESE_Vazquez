@@ -34,13 +34,12 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
-
 #include "parameters.h"
 #include "WiFi.h"
 #include "influxdb.h"
 #include "soil_moisture.h"
 #include "wind_speed.h"
-
+#include "BME680.h"
 /* === Public macros definitions =============================================================== */
 
 /* === Public data type declarations =========================================================== */

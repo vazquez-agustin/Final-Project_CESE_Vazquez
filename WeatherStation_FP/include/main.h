@@ -34,11 +34,7 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
-#include "soil_moisture.h"
-#include "WiFi.h"
-#include "influxdb.h"
 #include "sensor_manager.h"
-#include "parameters.h"
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -47,7 +43,6 @@ SPDX-License-Identifier: MIT
 #include "esp_system.h"
 #include "esp_log.h"
 #include "esp_err.h"
-
 /* === Public macros definitions =============================================================== */
 
 /* === Public data type declarations =========================================================== */
