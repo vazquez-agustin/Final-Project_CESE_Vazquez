@@ -36,14 +36,13 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ================================================================ */
 #include "I2C.h"
 /* === Public macros definitions =============================================================== */
-#define BME680_I2C_ADDRES     0x77
-#define BME680_REG_CTRL_HUM   0x72
-#define BME680_REG_CTRL_MEAS  0x74
-#define BME680_REG_HUM_MSB    0x25
-#define BME680_REG_HUM_LSB    0x26
-#define BME680_MODE_FORCED    0x01
+#define BME680_I2C_ADDRES     0x77 ///< Dirección I2C del sensor BME680.
 /* === Public data type declarations =========================================================== */
-
+typedef struct measure {
+    float Temperature;
+    float Pressure;
+    float Humidity;
+} measure_t;
 /* === Public variable declarations ============================================================ */
 
 /* === Public function declarations ============================================================ */
@@ -78,9 +77,9 @@ class BME680 {
          * @brief Constructor de la clase BME680.
          *
          * @param i2c_driver Puntero a la instancia de la clase I2C.
-         * @param sensor_addr Dirección I2C del sensor (por defecto 0x77).
+         * @param sensor_addr Dirección I2C del sensor.
          */
-        BME680(I2C *i2c_driver, uint8_t sensor_addr = BME680_I2C_ADDRES);
+        BME680(uint8_t sensor_addr = BME680_I2C_ADDRES);
     
         /**
          * @brief Destructor de la clase BME680.
@@ -88,11 +87,11 @@ class BME680 {
         ~BME680();
     
         /**
-         * @brief Inicializa el sensor BME680.
+         * @brief Inicializa y calibra las variables de los parámetros del sensor BME680.
          *
          * @return esp_err_t Resultado de la operación.
          */
-        esp_err_t init();
+        esp_err_t calibration();
     
         /**
          * @brief Configura el sensor en modo forced con los oversampling especificados.
@@ -167,10 +166,22 @@ class BME680 {
          *
          * @param hum_adc Valor raw de humedad.
          * @param temp_comp Temperatura compensada en °C.
+         * 
          * @return float Humedad compensada en % r.H.
          */
         float compensateHumidity(uint16_t hum_adc, float temp_comp);
+
+        /**
+         * @brief Lee los valores de temperatura, presión y humedad compensados.
+         *
+         * @param data Estructura donde se almacenarán los valores medidos.
+         * 
+         * @return float Valor de la medida (temperatura, presión o humedad).
+         */
+        bool getMeasure(measure_t *data);
+
     };
+
 
 /* === C++ header ============================================================================== */
 
