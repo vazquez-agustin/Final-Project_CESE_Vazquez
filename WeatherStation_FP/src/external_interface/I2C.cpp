@@ -38,7 +38,11 @@ SPDX-License-Identifier: MIT
 /* === Private data type declarations ========================================================== */
 
 /* === Private variable declarations =========================================================== */
-
+#define I2C_MASTER_NUM      I2C_NUM_0        
+#define I2C_MASTER_SDA_IO   GPIO_NUM_8          
+#define I2C_MASTER_SCL_IO   GPIO_NUM_9          
+#define I2C_MASTER_FREQ_HZ  400000   
+#define I2C_ADDRESS         0x77 
 /* === Private function declarations =========================================================== */
 
 /* === Public variable definitions ============================================================= */
@@ -58,7 +62,7 @@ SPDX-License-Identifier: MIT
  * @param _clk_speed Velocidad de reloj del bus I2C (en Hz).
  */
 I2C::I2C(i2c_port_t _i2c_num, gpio_num_t _sda_io, gpio_num_t _scl_io, uint32_t _clk_speed)
-    : i2c_num(_i2c_num), sda_io(_sda_io), scl_io(_scl_io), clk_speed(_clk_speed), tag("I2C")
+    : i2c_num(_i2c_num), sda_io(_sda_io), scl_io(_scl_io), clk_speed(_clk_speed)
 {
 }
 
@@ -77,16 +81,16 @@ I2C::~I2C() {
 esp_err_t I2C::i2cSetup() {
     i2c_config_t conf = {};
     conf.mode = I2C_MODE_MASTER;
-    conf.sda_io_num = sda_io;
-    conf.scl_io_num = scl_io;
+    conf.sda_io_num = I2C_MASTER_SDA_IO;
+    conf.scl_io_num = I2C_MASTER_SCL_IO;
     conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
     conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.master.clk_speed = clk_speed;
+    conf.master.clk_speed = I2C_MASTER_FREQ_HZ;
     
-    esp_err_t err = i2c_param_config(i2c_num, &conf);
+    esp_err_t err = i2c_param_config(I2C_MASTER_NUM, &conf);
     if (err != ESP_OK) return err;
     
-    return i2c_driver_install(i2c_num, I2C_MODE_MASTER, 0, 0, 0);
+    return i2c_driver_install(I2C_MASTER_NUM, I2C_MODE_MASTER, 0, 0, 0);
 }
 
 /**
@@ -103,15 +107,15 @@ esp_err_t I2C::readRegister(uint8_t addr, uint8_t reg, uint8_t *data) {
     esp_err_t err;
     
     i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (addr << 1) | I2C_MASTER_WRITE, true);
+    i2c_master_write_byte(cmd, (I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
     i2c_master_write_byte(cmd, reg, true);
     
     i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (addr << 1) | I2C_MASTER_READ, true);
+    i2c_master_write_byte(cmd, (I2C_ADDRESS << 1) | I2C_MASTER_READ, true);
     i2c_master_read_byte(cmd, data, I2C_MASTER_NACK);
     i2c_master_stop(cmd);
     
-    err = i2c_master_cmd_begin(i2c_num, cmd, pdMS_TO_TICKS(1000));
+    err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
     i2c_cmd_link_delete(cmd);
     
     return err;
@@ -132,16 +136,14 @@ esp_err_t I2C::writeRegister(uint8_t addr, uint8_t reg, uint8_t *data, size_t le
     esp_err_t err;
     
     i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (addr << 1) | I2C_MASTER_WRITE, true);
+    i2c_master_write_byte(cmd, (I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
     i2c_master_write_byte(cmd, reg, true);
     i2c_master_write(cmd, data, len, true);
     i2c_master_stop(cmd);
     
-    err = i2c_master_cmd_begin(i2c_num, cmd, pdMS_TO_TICKS(1000));
+    err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
     i2c_cmd_link_delete(cmd);
     
-    if (err != ESP_OK) {
-        ESP_LOGE(tag, "I2C write failed: %s", esp_err_to_name(err));
-    }
+
     return err;
 }

@@ -34,13 +34,11 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
-
 #include "driver/i2c.h"
 #include "esp_err.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-
 /* === Public macros definitions =============================================================== */
 
 /* === Public data type declarations =========================================================== */
@@ -57,8 +55,7 @@ class I2C {
         i2c_port_t i2c_num;       
         gpio_num_t sda_io;        
         gpio_num_t scl_io;        
-        uint32_t clk_speed;      
-        const char* tag;          
+        uint32_t clk_speed;         
     
     public:
         /**
