@@ -159,9 +159,6 @@ float BME680::compensateTemperature(uint32_t raw_temp, int32_t *t_fine) {
     var2 = (((float)raw_temp / 131072.0f - (float)par_t1 / 8192.0f) *
             ((float)raw_temp / 131072.0f - (float)par_t1 / 8192.0f)) * ((float)par_t3 * 16.0f);
     *t_fine = (int32_t)(var1 + var2);
-
-    ESP_LOGI("BME680", "var1=%f, var2=%f", var1, var2);
-    ESP_LOGI("BME680", "raw_temp=%lu", (unsigned long)raw_temp);
     
     return (((float)*t_fine) / 5120.0f);
 }
@@ -203,9 +200,6 @@ void BME680::readPressureCalibrationData() {
     par_p9 = (int16_t)((p9_msb << 8) | p9_lsb);
     
     i2c->readRegister(address, 0xA0, &par_p10); // par_p10 es uint8_t
-    
-    ESP_LOGI("BME680", "Calibración Pres: P1=%u, P2=%d, P3=%d, P4=%d, P5=%d, P6=%d, P7=%d, P8=%d, P9=%d, P10=%u",
-             par_p1, par_p2, par_p3, par_p4, par_p5, par_p6, par_p7, par_p8, par_p9, par_p10);
 }
 
 uint32_t BME680::readRawPressure() {
@@ -241,26 +235,13 @@ float BME680::compensatePressure(uint32_t raw_press, int32_t t_fine) {
 // ============================
 // Funciones de Humedad
 // ============================
-esp_err_t BME680::readRawHumidity(uint16_t *hum_adc) {
-    
-    esp_err_t err = !ESP_OK;
+uint16_t BME680::readRawHumidity() {
     uint8_t msb, lsb;
 
-    err = i2c->readRegister(address, BME680_REG_HUM_MSB, &msb);
-    if (err != ESP_OK) {
-        ESP_LOGE("BME680", "Error leyendo MSB de humedad");
-        return err;
-    }
+    if(i2c->readRegister(address, BME680_REG_HUM_MSB, &msb) != ESP_OK) return 0;
+    if(i2c->readRegister(address, BME680_REG_HUM_LSB, &lsb) != ESP_OK) return 0;
     
-    err = i2c->readRegister(address, BME680_REG_HUM_LSB, &lsb);
-    if (err != ESP_OK) {
-        ESP_LOGE("BME680", "Error leyendo LSB de humedad");
-        return err;
-    }
-    
-    *hum_adc = ((uint16_t)msb << 8) | lsb;
-    
-    return ESP_OK;
+    return ((uint16_t)msb << 8) | lsb;
 }
 
 void BME680::readHumidityCalibrationData() {
@@ -284,9 +265,6 @@ void BME680::readHumidityCalibrationData() {
     i2c->readRegister(address, 0xE7, &buf_E7);
     par_h6 = buf_E7;
     i2c->readRegister(address, 0xE8, (uint8_t *)&par_h7);
-    
-    ESP_LOGI("BME680", "Calibración Hum: H1=%u, H2=%d, H3=%d, H4=%d, H5=%d, H6=%d, H7=%d",
-             par_h1, par_h2, par_h3, par_h4, par_h5, par_h6, par_h7);
 }
 
 float BME680::compensateHumidity(uint16_t hum_adc, float temp_comp) {
@@ -298,7 +276,7 @@ float BME680::compensateHumidity(uint16_t hum_adc, float temp_comp) {
              (((double)par_h5 / 1048576.0) * temp_comp * temp_comp)));
     var3 = (double)par_h6 / 16384.0;
     var4 = (double)par_h7 / 2097152.0;
-
+    
     return (var2 + ((var3 + (var4 * temp_comp)) * var2 * var2));
 }
 
@@ -325,7 +303,7 @@ bool BME680::getMeasure(measure_t *data) {
     data->Temperature = compensateTemperature(temp_raw, &t_fine);
 
     // Leer y compensar humedad
-    hum_raw = readRawHumidity(&hum_raw);
+    hum_raw = readRawHumidity();
     data->Humidity = compensateHumidity(hum_raw, data->Temperature);
 
     // Leer y compensar presión

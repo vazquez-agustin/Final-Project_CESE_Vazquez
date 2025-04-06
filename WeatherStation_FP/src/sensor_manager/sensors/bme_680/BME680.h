@@ -159,7 +159,7 @@ class BME680 {
          * @param hum_adc Puntero donde se almacenará el valor raw de humedad.
          * @return esp_err_t Resultado de la operación.
          */
-        esp_err_t readRawHumidity(uint16_t *hum_adc);
+        uint16_t readRawHumidity();
     
         /**
          * @brief Compensa la humedad raw utilizando la temperatura compensada.
