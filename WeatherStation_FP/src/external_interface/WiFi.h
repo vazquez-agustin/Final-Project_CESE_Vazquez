@@ -34,14 +34,12 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
-
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
 #include <string.h>
 #include <string>
-
 /* === Public macros definitions =============================================================== */
 
 /* === Public data type declarations =========================================================== */

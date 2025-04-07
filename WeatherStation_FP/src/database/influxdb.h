@@ -34,13 +34,11 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
-
 #include "parameters.h"
 #include "esp_http_client.h"
 #include "esp_log.h"
 #include <cstring>
 #include <string>
-
 /* === Public macros definitions =============================================================== */
 
 /* === Public data type declarations =========================================================== */
