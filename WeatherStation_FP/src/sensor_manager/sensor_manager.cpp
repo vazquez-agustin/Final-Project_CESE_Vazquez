@@ -53,7 +53,9 @@ SPDX-License-Identifier: MIT
  * @brief Constructor por defecto de SensorManager.
  */
 SensorManager::SensorManager()
-    : soilMoistureSensor(ADC1_CHANNEL_0), windSpeedSensor(ADC1_CHANNEL_1) {}
+    : soilMoistureSensor(ADC1_CHANNEL_0), windSpeedSensor(ADC1_CHANNEL_1) {
+        
+    }
 
 /**
  * @brief Inicializa y establece la conexión Wi-Fi con el punto de acceso especificado.
@@ -83,11 +85,17 @@ void SensorManager::sensorsRun()
     {
         uint32_t moisture_percentage = soilMoistureSensor.readPercentage();
         uint32_t speed_velocity = windSpeedSensor.getSpeed();
+        measure_t data;
+
+        bme680.getMeasure(&data);;
 
         ESP_LOGI("SensorManager", "Soil moisture: %lu%%", (unsigned long)moisture_percentage);
         ESP_LOGI("SensorManager", "Wind speed: %lu m/s", (unsigned long)speed_velocity);
+        ESP_LOGI("SensorManager", "Temperature: %f °C", data.Temperature);
+        ESP_LOGI("SensorManager", "Pressure: %f hPa", data.Pressure);
+        ESP_LOGI("SensorManager", "Humidity: %f %%", data.Humidity);
 
-        influxClient.send_data(moisture_percentage, speed_velocity);
+        influxClient.send_data(moisture_percentage, speed_velocity, data.Temperature, data.Pressure, data.Humidity);
 
         vTaskDelay(pdMS_TO_TICKS(5000));
     }

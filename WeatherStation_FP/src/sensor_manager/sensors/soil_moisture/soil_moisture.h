@@ -34,11 +34,9 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
-
 #include "ADC.h"
 #include "driver/adc.h"
 #include <stdint.h>
-
 /* === Public macros definitions =============================================================== */
 
 /* === Public data type declarations =========================================================== */

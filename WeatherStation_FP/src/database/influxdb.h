@@ -34,13 +34,11 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
-
 #include "parameters.h"
 #include "esp_http_client.h"
 #include "esp_log.h"
 #include <cstring>
 #include <string>
-
 /* === Public macros definitions =============================================================== */
 
 /* === Public data type declarations =========================================================== */
@@ -73,7 +71,7 @@ public:
      * @param moisture_value Valor actual de humedad del suelo (en %).
      * @param speed_value Valor actual de la velocidad del viento (en m/s).
      */
-    void send_data(uint32_t moisture_value, uint32_t speed_value);
+    void send_data(uint32_t moisture_value, uint32_t speed_value, float temperature_value, float pressure_value, float humidity_value);
 };
 
 /* === C++ header ============================================================================== */
