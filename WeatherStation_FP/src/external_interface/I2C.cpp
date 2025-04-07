@@ -34,15 +34,14 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ================================================================ */
 #include "I2C.h"
 /* === Macros definitions ====================================================================== */
-
+/** @brief Puerto I2C utilizado. */
+#define I2C_MASTER_NUM I2C_NUM_0      
+/** @brief Dirección I2C utilizado por el sensor BME680. */   
+#define I2C_ADDRESS    0x77 
 /* === Private data type declarations ========================================================== */
 
 /* === Private variable declarations =========================================================== */
-#define I2C_MASTER_NUM      I2C_NUM_0        
-#define I2C_MASTER_SDA_IO   GPIO_NUM_8          
-#define I2C_MASTER_SCL_IO   GPIO_NUM_9          
-#define I2C_MASTER_FREQ_HZ  400000   
-#define I2C_ADDRESS         0x77 
+
 /* === Private function declarations =========================================================== */
 
 /* === Public variable definitions ============================================================= */
@@ -81,11 +80,11 @@ I2C::~I2C() {
 esp_err_t I2C::i2cSetup() {
     i2c_config_t conf = {};
     conf.mode = I2C_MODE_MASTER;
-    conf.sda_io_num = I2C_MASTER_SDA_IO;
-    conf.scl_io_num = I2C_MASTER_SCL_IO;
+    conf.sda_io_num = sda_io;
+    conf.scl_io_num = scl_io;
     conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
     conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.master.clk_speed = I2C_MASTER_FREQ_HZ;
+    conf.master.clk_speed = clk_speed;
     
     esp_err_t err = i2c_param_config(I2C_MASTER_NUM, &conf);
     if (err != ESP_OK) return err;

@@ -36,8 +36,15 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ================================================================ */
 #include "I2C.h"
 /* === Public macros definitions =============================================================== */
-#define BME680_I2C_ADDRES     0x77 ///< Dirección I2C del sensor BME680.
+/** @brief Dirección I2C utilizado por el sensor BME680. */ 
+#define BME680_I2C_ADDRESS 0x77
 /* === Public data type declarations =========================================================== */
+/**
+ * @brief Estructura que almacena mediciones compensadas del sensor BME680.
+ *
+ * Contiene los valores finales calculados para temperatura, presión y humedad,
+ * luego de aplicar las compensaciones necesarias a partir de lecturas en bruto.
+ */
 typedef struct measure {
     float Temperature;
     float Pressure;
@@ -49,27 +56,32 @@ typedef struct measure {
 
 class BME680 {
     private:
-        I2C *i2c;                ///< Puntero a la instancia de la clase I2C para la comunicación.
-        uint8_t address;         ///< Dirección I2C del sensor.
+        /** @brief Instancia para la comunicación mediante el bus I2C con el sensor. */ 
+        I2C *i2c;              
+        /** @brief Dirección I2C del sensor BME680. */   
+        uint8_t address;         
     
-        // Parámetros de calibración para humedad
-        uint16_t par_h1;
-        int16_t par_h2;
+        /** @brief Parámetro de calibración H1 & H2 (unsigned de 16 bits). */ 
+        uint16_t par_h1, par_h2;
+        /** @brief Parámetro de calibración H3, H4, H5 & H7 (signed de 8 bits). */ 
         int8_t par_h3, par_h4, par_h5, par_h7;
+        /** @brief Parámetro de calibración H6 (unsigned de 16 bits). */ 
         uint8_t par_h6;
     
-        // Parámetros de calibración para temperatura
+        /** @brief Parámetro de calibración T1 (unsigned de 16 bits). */ 
         uint16_t par_t1;
+        /** @brief Parámetro de calibración T2 (signed de 16 bits). */ 
         int16_t par_t2;
+        /** @brief Parámetro de calibración T3 (signed de 8 bits). */ 
         int8_t par_t3;
     
-        // Parámetros de calibración para presión
+        /** @brief Parámetro de calibración P1 (unsigned de 16 bits). */ 
         uint16_t par_p1;
-        int16_t par_p2;
-        int8_t par_p3;
-        int16_t par_p4, par_p5;
-        int8_t par_p6, par_p7;
-        int16_t par_p8, par_p9;
+        /** @brief Parámetro de calibración P2, P4, P5, P8 & P9 (signed de 16 bits). */ 
+        int16_t par_p2, par_p4, par_p5, par_p8, par_p9;
+        /** @brief Parámetro de calibración P3, P6 & P7 (signed de 8 bits). */ 
+        int8_t par_p3, par_p6, par_p7;
+        /** @brief Parámetro de calibración P10 (unsigned de 8 bits). */  
         uint8_t par_p10;
     
     public:
@@ -79,7 +91,7 @@ class BME680 {
          * @param i2c_driver Puntero a la instancia de la clase I2C.
          * @param sensor_addr Dirección I2C del sensor.
          */
-        BME680(uint8_t sensor_addr = BME680_I2C_ADDRES);
+        BME680(uint8_t sensor_addr = BME680_I2C_ADDRESS);
     
         /**
          * @brief Destructor de la clase BME680.
@@ -155,9 +167,8 @@ class BME680 {
     
         /**
          * @brief Lee el valor raw de humedad del sensor.
-         *
-         * @param hum_adc Puntero donde se almacenará el valor raw de humedad.
-         * @return esp_err_t Resultado de la operación.
+         * 
+         * @return uint16_t Valor raw de humedad.
          */
         uint16_t readRawHumidity();
     
