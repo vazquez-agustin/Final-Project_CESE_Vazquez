@@ -34,15 +34,16 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ================================================================ */
 #include "BME680.h"
 #include <string.h>
+#include "esp_log.h"
 /* === Macros definitions ====================================================================== */
 /** @brief Puerto I2C. */
-#define I2C_MASTER_NUM        I2C_NUM_0           
+// #define I2C_MASTER_NUM        I2C_NUM_0           
 /** @brief GPIO pin SDA utilizado por I2C. */
-#define I2C_MASTER_SDA_IO     GPIO_NUM_8
+// #define I2C_MASTER_SDA_IO     GPIO_NUM_8
 /** @brief GPIO pin SCL utilizado por I2C. */         
-#define I2C_MASTER_SCL_IO     GPIO_NUM_9
+// #define I2C_MASTER_SCL_IO     GPIO_NUM_9
 /** @brief Frecuencia del reloj I2C. */            
-#define I2C_MASTER_FREQ_HZ    400000
+// #define I2C_MASTER_FREQ_HZ    400000
 /** @brief Dirección I2C del sensor BME680. */       
 #define I2C_REG_ADDRESS       0x77 
 /** @brief Registro para control de humedad en el sensor BME680. */
@@ -162,9 +163,10 @@ SPDX-License-Identifier: MIT
  *
  * @param sensor_addr Dirección I2C del sensor BME680.
  */
-BME680::BME680(uint8_t sensor_addr)
+BME680::BME680(I2C_interface *i2c_driver, uint8_t sensor_addr) 
 {
-    i2c = new I2C(I2C_MASTER_NUM, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO, I2C_MASTER_FREQ_HZ);
+    //i2c = new I2C(I2C_MASTER_NUM, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO, I2C_MASTER_FREQ_HZ);
+    i2c = i2c_driver; // Se utiliza la instancia de I2C proporcionada externamente.
     i2c->i2cSetup();
     // Parámetros de calibración para humedad
     par_h1 = par_h2 = par_h3 = par_h4 = par_h5 = par_h7 = par_h6 = 0;
@@ -285,7 +287,6 @@ float BME680::compensateTemperature(uint32_t raw_temp, int32_t *t_fine) {
     
     return (((float)*t_fine) / 5120.0f);
 }
-
 
 /**
  * @brief Lee los datos de calibración de presión desde el sensor.

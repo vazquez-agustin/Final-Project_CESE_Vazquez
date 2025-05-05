@@ -34,6 +34,7 @@ SPDX-License-Identifier: MIT
  **/
 
 /* === Headers files inclusions ================================================================ */
+#include "i2c_interface.h"
 #include "driver/i2c.h"
 #include "esp_err.h"
 #include "esp_log.h"
@@ -50,7 +51,7 @@ SPDX-License-Identifier: MIT
 /**
  * @brief Clase que encapsula la configuración y operaciones básicas de I2C.
  */
-class I2C {
+class I2C: public I2C_interface {
     private:
         i2c_port_t i2c_num;       
         gpio_num_t sda_io;        

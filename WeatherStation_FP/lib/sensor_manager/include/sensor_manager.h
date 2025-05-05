@@ -40,8 +40,16 @@ SPDX-License-Identifier: MIT
 #include "soil_moisture.h"
 #include "wind_speed.h"
 #include "BME680.h"
+#include "I2C.h"
 /* === Public macros definitions =============================================================== */
-
+/** @brief Puerto I2C. */
+#define I2C_MASTER_NUM        I2C_NUM_0           
+/** @brief GPIO pin SDA utilizado por I2C. */
+#define I2C_MASTER_SDA_IO     GPIO_NUM_8
+/** @brief GPIO pin SCL utilizado por I2C. */         
+#define I2C_MASTER_SCL_IO     GPIO_NUM_9
+/** @brief Frecuencia del reloj I2C. */            
+#define I2C_MASTER_FREQ_HZ    400000
 /* === Public data type declarations =========================================================== */
 
 /* === Public variable declarations ============================================================ */
@@ -64,7 +72,7 @@ private:
     /** @brief Instancia del sensor de velocidad de viento. */
     WindSpeedSensor windSpeedSensor;
     /** @brief Instancia del sensor BME680. */
-    BME680 bme680;
+    BME680 bme680 = BME680(new I2C(I2C_MASTER_NUM, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO, I2C_MASTER_FREQ_HZ));
 
 public:
     /**
