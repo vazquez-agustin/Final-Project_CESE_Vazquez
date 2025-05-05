@@ -58,17 +58,17 @@ SPDX-License-Identifier: MIT
 #include"demo.h"
 void app_main()
 {
-    Demo demo;
-    int result = demo.F();
-    printf("El resultado de la función F() es: %d\n", result);
+    //Demo demo;
+    //int result = demo.F();
+    //printf("El resultado de la función F() es: %d\n", result);
 
-    // ESP_LOGI("Bienvenido","¡Hola Mundo! ESP32-C3 está funcionando\n"); 
+    ESP_LOGI("Bienvenido","¡Hola Mundo! ESP32-C3 está funcionando\n"); 
 
-    // ESP_ERROR_CHECK(nvs_flash_init());
+    ESP_ERROR_CHECK(nvs_flash_init());
 
-    // SensorManager manager;
+    SensorManager manager;
 
-    // manager.initWiFi();
+    manager.initWiFi();
 
-    // manager.sensorsRun();
+    manager.sensorsRun();
 }

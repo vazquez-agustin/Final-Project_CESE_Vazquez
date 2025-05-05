@@ -104,6 +104,4 @@ class I2C {
         esp_err_t writeRegister(uint8_t addr, uint8_t reg, uint8_t *data, size_t len);
     };   
 
-
-
 #endif // I2C_H

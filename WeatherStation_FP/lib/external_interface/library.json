@@ -1,0 +1,10 @@
+{
+    "name": "ExternalInterface",
+    "version": "1.0.0",
+    "description": "Abstracción de interfaces de hardware (WiFi, ADC, I2C) para el ESP32-C3",
+    "build": {
+      "srcDir": "src",
+      "includeDir": "include",
+      "lib_compat": false
+    }
+}

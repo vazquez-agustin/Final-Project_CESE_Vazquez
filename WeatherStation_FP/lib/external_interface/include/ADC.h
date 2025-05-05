@@ -74,7 +74,7 @@ public:
      * @param _attenuation Atenuación para ajustar el rango de entrada (por defecto ADC_ATTEN_DB_12).
      * @param _adc_chars Características ADC opcionales para calibración.
      */
-    ADC(adc1_channel_t _channel, adc_unit_t _unit = ADC_UNIT_1, adc_atten_t _attenuation = ADC_ATTEN_DB_11, esp_adc_cal_characteristics_t *_adc_chars = nullptr);
+    ADC(adc1_channel_t _channel, adc_unit_t _unit = ADC_UNIT_1, adc_atten_t _attenuation = ADC_ATTEN_DB_12, esp_adc_cal_characteristics_t *_adc_chars = nullptr);
     ~ADC();
     
     /**
