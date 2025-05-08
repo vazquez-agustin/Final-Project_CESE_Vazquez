@@ -1,13 +1,14 @@
 #ifndef MOCK_I2C_H
 #define MOCK_I2C_H
 
+#include "i2c_interface.h"
 #include <stdint.h>
 #include "esp_err.h"
 
-class I2C {
+class I2CMock: public I2C_interface {
 public:
-    I2C(int, int, int, int) {}
-    ~I2C() {}
+    I2CMock() {}
+    ~I2CMock() {}
 
     esp_err_t i2cSetup() { return ESP_OK; }
 

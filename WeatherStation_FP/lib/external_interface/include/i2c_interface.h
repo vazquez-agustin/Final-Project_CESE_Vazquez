@@ -4,18 +4,9 @@
 #include "esp_err.h"
 
 
-class I2C_interface {
-    private:
-        // i2c_port_t i2c_num;       
-        // gpio_num_t sda_io;        
-        // gpio_num_t scl_io;        
-        // uint32_t clk_speed;         
+class I2C_interface {       
     
     public:
-
-        // I2C(i2c_port_t _i2c_num, gpio_num_t _sda_io, gpio_num_t _scl_io, uint32_t _clk_speed);
-    
-        // ~I2C();
 
         virtual esp_err_t i2cSetup() = 0;
     
