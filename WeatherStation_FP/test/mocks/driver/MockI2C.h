@@ -1,10 +1,10 @@
 #ifndef MOCK_I2C_H
 #define MOCK_I2C_H
 
+#include <cstddef>  // for size_t
 #include "i2c_interface.h"
-#include <stdint.h>
-#include "esp_err.h"
-
+// #include "esp_err.h"
+#define ESP_OK 0
 class I2CMock: public I2C_interface {
 public:
     I2CMock() {}
