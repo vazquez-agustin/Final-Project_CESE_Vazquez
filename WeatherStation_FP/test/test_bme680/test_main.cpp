@@ -1,4 +1,4 @@
-#include "../mocks/driver/MockI2C.h"
+#include "MockI2C.h"
 // #include "BME680.h"
 #include <unity.h>
 
