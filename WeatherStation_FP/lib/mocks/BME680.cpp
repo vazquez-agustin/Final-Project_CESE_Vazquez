@@ -34,7 +34,7 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ================================================================ */
 #include "BME680.h"
 #include <string.h>
-#include "esp_log.h"
+// #include "esp_log.h"
 /* === Macros definitions ====================================================================== */
 /** @brief Puerto I2C. */
 // #define I2C_MASTER_NUM        I2C_NUM_0           
@@ -215,14 +215,14 @@ esp_err_t BME680::configForcedMode(uint8_t humOSR, uint8_t tempOSR, uint8_t pres
     
     err = i2c->readRegister(I2C_REG_ADDRESS, BME680_REG_CTRL_HUM, &data);
     if (err != ESP_OK) {
-        ESP_LOGE("BME680", "Error leyendo ctrl_hum");
+        // ESP_LOGE("BME680", "Error leyendo ctrl_hum");
         return err;
     }
     data &= 0xF8; // Limpiar bits [2:0]
     data |= (humOSR & 0x07);
     err = i2c->writeRegister(I2C_REG_ADDRESS, BME680_REG_CTRL_HUM, &data, 1);
     if (err != ESP_OK) {
-        ESP_LOGE("BME680", "Error escribiendo ctrl_hum");
+        // ESP_LOGE("BME680", "Error escribiendo ctrl_hum");
         return err;
     }
     
@@ -230,7 +230,7 @@ esp_err_t BME680::configForcedMode(uint8_t humOSR, uint8_t tempOSR, uint8_t pres
     data = (((tempOSR & 0x07) << 5) | ((presOSR & 0x07) << 2) | BME680_MODE_FORCED);
     err = i2c->writeRegister(I2C_REG_ADDRESS, BME680_REG_CTRL_MEAS, &data, 1);
     if (err != ESP_OK) {
-        ESP_LOGE("BME680", "Error escribiendo ctrl_meas");
+        // ESP_LOGE("BME680", "Error escribiendo ctrl_meas");
         return err;
     }
     return ESP_OK;

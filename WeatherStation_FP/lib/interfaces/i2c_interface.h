@@ -2,8 +2,9 @@
 #define I2C_INTERFACE_H
 
 #include <stdint.h>
+#include <stddef.h> 
 
-// #include "esp_err.h"
+#include "esp_err.h"
 typedef int esp_err_t;
 
 class I2C_interface {       
