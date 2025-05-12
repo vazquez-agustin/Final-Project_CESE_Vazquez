@@ -357,6 +357,11 @@ uint32_t BME680::readRawPressure() {
 float BME680::compensatePressure(uint32_t raw_press, int32_t t_fine) {
     double var1, var2, var3, press_comp;
 
+    // Protección contra división por cero
+    if (par_p1 == 0) {
+        return 0.0f;
+    }
+
     var1 = ((double)t_fine / 2.0) - 64000.0;
     var2 = var1 * var1 * ((double)par_p6 / 131072.0);
     var2 = var2 + (var1 * (double)par_p5 * 2.0);
