@@ -55,7 +55,6 @@ SPDX-License-Identifier: MIT
  * Inicializa la memoria no volátil (NVS), configura la conexión Wi-Fi e inicia el bucle
  * de medición y transmisión continua de los datos recolectados por la estación meteorológica.
  */
-#include"demo.h"
 void app_main()
 {
     //Demo demo;
