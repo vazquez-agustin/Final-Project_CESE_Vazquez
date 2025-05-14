@@ -34,6 +34,7 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ================================================================ */
 #include "BME680.h"
 #include <string.h>
+#include <cstdio>
 // #include "esp_log.h"
 /* === Macros definitions ====================================================================== */
 /** @brief Puerto I2C. */
@@ -359,7 +360,7 @@ float BME680::compensatePressure(uint32_t raw_press, int32_t t_fine) {
 
     // Protección contra división por cero
     if (par_p1 == 0) {
-        return 0.0f;
+        return -1; // Error: par_p1 no puede ser cero
     }
 
     var1 = ((double)t_fine / 2.0) - 64000.0;
