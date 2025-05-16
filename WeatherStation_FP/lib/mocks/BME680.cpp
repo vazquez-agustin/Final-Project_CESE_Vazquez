@@ -36,8 +36,8 @@ SPDX-License-Identifier: MIT
 #include <string.h>
 #include <cstdio>
 // #include "esp_log.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+// #include "freertos/FreeRTOS.h"
+// #include "freertos/task.h"
 /* === Macros definitions ====================================================================== */
 /** @brief Puerto I2C. */
 // #define I2C_MASTER_NUM        I2C_NUM_0           
@@ -242,7 +242,7 @@ esp_err_t BME680::configForcedMode(uint8_t humOSR, uint8_t tempOSR, uint8_t pres
         // ESP_LOGE("BME680", "Error escribiendo ctrl_meas");
         return err;
     }
-    vTaskDelay(pdMS_TO_TICKS(50)); // Esperar 50 ms para que el sensor realice la medición
+    // vTaskDelay(pdMS_TO_TICKS(50)); // Esperar 50 ms para que el sensor realice la medición
     return ESP_OK;
 }
 
