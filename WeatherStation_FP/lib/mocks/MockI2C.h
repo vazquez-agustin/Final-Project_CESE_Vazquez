@@ -30,6 +30,12 @@ public:
         }
         return ESP_OK;
     }
+
+    /** Para test: devuelve el valor que hay en un registro concreto */
+    uint8_t getRegisterValue(uint8_t reg) const {
+        auto it = reg_map.find(reg);
+        return it != reg_map.end() ? it->second : 0;
+    }
 };
 
 #endif
