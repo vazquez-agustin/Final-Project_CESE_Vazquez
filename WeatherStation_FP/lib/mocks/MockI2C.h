@@ -1,10 +1,9 @@
 #ifndef MOCK_I2C_H
 #define MOCK_I2C_H
 
-#include <cstddef>  // for size_t
 #include "i2c_interface.h"
+#include <cstddef>  // for size_t
 #include <map>  // for std::map
-// #include "esp_err.h"
 
 #define ESP_OK 0
 
