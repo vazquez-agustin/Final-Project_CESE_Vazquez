@@ -34,6 +34,7 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ================================================================ */
 #include "MockI2C.h"
 #include "BME680.h"
+#include "BME680_defines.h" 
 #include <unity.h>
 #include <cstdio>
 /* === Macros definitions ====================================================================== */
@@ -57,52 +58,6 @@ const uint8_t REG_HUM_LSB       = 0x26;
 // Registro donde se lee el ID del chip (para validar presencia)
 const uint8_t REG_CHIP_ID       = 0xD0;
 const uint8_t BME680_CHIP_ID    = 0x61;    // Valor esperado del chip ID
-
-// Registros de calibración de temperatura
-const uint8_t BME680_REG_T1_MSB = 0xE9;
-const uint8_t BME680_REG_T1_LSB = 0xEA;
-const uint8_t BME680_REG_T2_MSB = 0x8A;
-const uint8_t BME680_REG_T2_LSB = 0x8B;
-const uint8_t BME680_REG_T3     = 0x8C;
-
-// Registros de calibración de humedad
-const uint8_t BME680_REG_H1_MSB = 0xE3;
-const uint8_t BME680_REG_H1_LSB = 0xE2;
-const uint8_t BME680_REG_H2_MSB = 0xE1;
-const uint8_t BME680_REG_H2_LSB = 0xE2;
-const uint8_t BME680_REG_H3     = 0xE4;
-const uint8_t BME680_REG_H4     = 0xE5;
-const uint8_t BME680_REG_H5     = 0xE6;
-const uint8_t BME680_REG_H6     = 0xE7;
-const uint8_t BME680_REG_H7     = 0xE8;
-
-// Registros de calibración de presión
-const uint8_t BME680_REG_P1_MSB = 0x8F;
-const uint8_t BME680_REG_P1_LSB = 0x8E;
-const uint8_t BME680_REG_P2_MSB = 0x91;
-const uint8_t BME680_REG_P2_LSB = 0x90;
-const uint8_t BME680_REG_P3     = 0x92;
-const uint8_t BME680_REG_P4_MSB = 0x95;
-const uint8_t BME680_REG_P4_LSB = 0x94;
-const uint8_t BME680_REG_P5_MSB = 0x97;
-const uint8_t BME680_REG_P5_LSB = 0x96;
-const uint8_t BME680_REG_P6     = 0x99;
-const uint8_t BME680_REG_P7     = 0x98;
-const uint8_t BME680_REG_P8_MSB = 0x9D;
-const uint8_t BME680_REG_P8_LSB = 0x9C;
-const uint8_t BME680_REG_P9_MSB = 0x9F;
-const uint8_t BME680_REG_P9_LSB = 0x9E;
-const uint8_t BME680_REG_P10    = 0xA0;
-
-// Registros para configurar oversampling y modo forced
-const uint8_t BME680_REG_CTRL_HUM  = 0x72;
-const uint8_t BME680_REG_CTRL_MEAS = 0x74;
-const uint8_t BME680_MODE_FORCED   = 0x01;
-
-// Valores de oversampling usados en tests
-const uint8_t BME680_OSR_2X = 0x02;
-const uint8_t BME680_OSR_4X = 0x03;
-const uint8_t BME680_OSR_8X = 0x04;
 
 /* === Private data type declarations ========================================================== */
 
