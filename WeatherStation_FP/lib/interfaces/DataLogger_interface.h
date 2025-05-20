@@ -1,5 +1,5 @@
-#ifndef ESP_LOG_MOCK_H
-#define ESP_LOG_MOCK_H
+#ifndef DATA_LOGGER_INTERFACE_H
+#define DATA_LOGGER_INTERFACE_H
 
 class DataLogger_interface {       
 
@@ -9,4 +9,4 @@ class DataLogger_interface {
         
     };
 
-#endif // ESP_LOG_MOCK_H
+#endif // DATA_LOGGER_INTERFACE_H
