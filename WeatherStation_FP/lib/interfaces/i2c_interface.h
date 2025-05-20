@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 #include <stddef.h> 
-
 #include "esp_err.h"
+
 typedef int esp_err_t;
 
 class I2C_interface {       
