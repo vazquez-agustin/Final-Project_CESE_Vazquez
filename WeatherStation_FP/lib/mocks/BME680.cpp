@@ -36,7 +36,6 @@ SPDX-License-Identifier: MIT
 #include "BME680_defines.h"  
 #include <string.h>
 #include <cstdio>
-// #include "esp_log.h"
 // #include "freertos/FreeRTOS.h"
 // #include "freertos/task.h"
 /* === Macros definitions ====================================================================== */
@@ -60,12 +59,13 @@ SPDX-License-Identifier: MIT
  *
  * @param sensor_addr Dirección I2C del sensor BME680.
  */
-BME680::BME680(I2C_interface *i2c_driver, uint8_t sensor_addr) 
+BME680::BME680(I2C_interface *i2c_driver, DataLogger_interface *logger, uint8_t sensor_addr) 
 {
     //i2c = new I2C(I2C_MASTER_NUM, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO, I2C_MASTER_FREQ_HZ);
     i2c = i2c_driver; // Se utiliza la instancia de I2C proporcionada externamente.
     address = sensor_addr;
     i2c->i2cSetup();
+    this->logger = logger;
 
     // Parámetros de calibración para temperatura
     par_t1 = par_t2 = par_t3 = 0;
@@ -118,14 +118,14 @@ esp_err_t BME680::configForcedMode(uint8_t humOSR, uint8_t tempOSR, uint8_t pres
     
     err = i2c->readRegister(this->address, BME680_REG_CTRL_HUM, &data);
     if (err != ESP_OK) {
-        // ESP_LOGE("BME680", "Error leyendo ctrl_hum");
+        logger->logEspLog("BME680", "Error leyendo ctrl_hum");
         return err;
     }
     data &= 0xF8; // Limpiar bits [2:0]
     data |= (humOSR & 0x07);
     err = i2c->writeRegister(this->address, BME680_REG_CTRL_HUM, &data, 1);
     if (err != ESP_OK) {
-        // ESP_LOGE("BME680", "Error escribiendo ctrl_hum");
+        logger->logEspLog("BME680", "Error escribiendo ctrl_hum");
         return err;
     }
     
@@ -133,7 +133,7 @@ esp_err_t BME680::configForcedMode(uint8_t humOSR, uint8_t tempOSR, uint8_t pres
     data = (((tempOSR & 0x07) << 5) | ((presOSR & 0x07) << 2) | BME680_MODE_FORCED);
     err = i2c->writeRegister(this->address, BME680_REG_CTRL_MEAS, &data, 1);
     if (err != ESP_OK) {
-        // ESP_LOGE("BME680", "Error escribiendo ctrl_meas");
+        logger->logEspLog("BME680", "Error escribiendo ctrl_meas");
         return err;
     }
     // vTaskDelay(pdMS_TO_TICKS(50)); // Esperar 50 ms para que el sensor realice la medición

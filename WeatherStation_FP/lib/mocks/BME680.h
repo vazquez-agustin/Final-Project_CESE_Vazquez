@@ -35,6 +35,7 @@ SPDX-License-Identifier: MIT
 
 /* === Headers files inclusions ================================================================ */
 #include "i2c_interface.h"
+#include "DataLogger_interface.h"
 /* === Public macros definitions =============================================================== */
 /** @brief Dirección I2C utilizado por el sensor BME680. */ 
 #define BME680_I2C_ADDRESS 0x77
@@ -56,6 +57,9 @@ typedef struct measure {
 
 class BME680 {
     private:
+
+        DataLogger_interface *logger;  /**< @brief Instancia para el registro de logs. */
+
         /** @brief Instancia para la comunicación mediante el bus I2C con el sensor. */ 
         I2C_interface *i2c;              
         /** @brief Dirección I2C del sensor BME680. */   
@@ -91,7 +95,7 @@ class BME680 {
          * @param i2c_driver Puntero a la instancia de la clase I2C.
          * @param sensor_addr Dirección I2C del sensor.
          */
-        BME680(I2C_interface *i2c_driver, uint8_t sensor_addr = BME680_I2C_ADDRESS);
+        BME680(I2C_interface *i2c_driver, DataLogger_interface *logger, uint8_t sensor_addr = BME680_I2C_ADDRESS);
     
         /**
          * @brief Destructor de la clase BME680.

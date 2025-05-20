@@ -41,6 +41,7 @@ SPDX-License-Identifier: MIT
 #include "wind_speed.h"
 #include "BME680.h"
 #include "I2C.h"
+#include "DataLogger.h"
 /* === Public macros definitions =============================================================== */
 /** @brief Puerto I2C. */
 #define I2C_MASTER_NUM        I2C_NUM_0           
@@ -72,7 +73,8 @@ private:
     /** @brief Instancia del sensor de velocidad de viento. */
     WindSpeedSensor windSpeedSensor;
     /** @brief Instancia del sensor BME680. */
-    BME680 bme680 = BME680(new I2C(I2C_MASTER_NUM, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO, I2C_MASTER_FREQ_HZ));
+    BME680 bme680 = BME680(new I2C(I2C_MASTER_NUM, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO, I2C_MASTER_FREQ_HZ), 
+                           new DataLogger());
 
 public:
     /**
