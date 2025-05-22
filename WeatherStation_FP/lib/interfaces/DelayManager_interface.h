@@ -1,6 +1,7 @@
-#include <cstdint>
 #ifndef DELAY_MANAGER_INTERFACE_H
 #define DELAY_MANAGER_INTERFACE_H
+
+#include <cstdint>
 
 class DelayManager_interface {       
 
