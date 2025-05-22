@@ -33,31 +33,13 @@ SPDX-License-Identifier: MIT
 
 /* === Headers files inclusions ================================================================ */
 #include "MockI2C.h"
+#include "DataLoggerMock.cpp"
+#include "DelayManagerMock.cpp"
 #include "BME680.h"
-#include "BME680_defines.h" 
+#include "BME680_defines.h"
 #include <unity.h>
 #include <cstdio>
 /* === Macros definitions ====================================================================== */
-// Dirección I2C del sensor BME680
-const uint8_t BME680_I2C_ADDR   = 0x77;
-
-// Registros para lectura cruda de presión (20 bits: MSB, LSB, XLSB)
-const uint8_t REG_PRESS_MSB     = 0x1F;
-const uint8_t REG_PRESS_LSB     = 0x20;
-const uint8_t REG_PRESS_XLSB    = 0x21;
-
-// Registros para lectura cruda de temperatura (20 bits: MSB, LSB, XLSB)
-const uint8_t REG_TEMP_MSB      = 0x22;
-const uint8_t REG_TEMP_LSB      = 0x23;
-const uint8_t REG_TEMP_XLSB     = 0x24;
-
-// Registros para lectura cruda de humedad (16 bits: MSB, LSB)
-const uint8_t REG_HUM_MSB       = 0x25;
-const uint8_t REG_HUM_LSB       = 0x26;
-
-// Registro donde se lee el ID del chip (para validar presencia)
-const uint8_t REG_CHIP_ID       = 0xD0;
-const uint8_t BME680_CHIP_ID    = 0x61;    // Valor esperado del chip ID
 
 /* === Private data type declarations ========================================================== */
 
@@ -98,7 +80,10 @@ static void splitRaw16(uint16_t raw, uint8_t &msb, uint8_t &lsb) {
 }
 
 I2CMock i2cMock;
-BME680 bme680 = BME680(&i2cMock);
+DataLoggerMock dataLogger;
+DelayManagerMock delayManager;
+
+BME680 bme680 = BME680(&i2cMock, &dataLogger, &delayManager);
 
 /**
  * @brief Inicialización previa a cada test.
