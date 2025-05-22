@@ -1,6 +1,6 @@
 #include "DelayManager_interface.h"
 
-class DelayManager: public DelayManager_interface {
+class DelayManagerMock: public DelayManager_interface {
     private:
 
     public:
