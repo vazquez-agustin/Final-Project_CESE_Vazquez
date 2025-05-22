@@ -57,9 +57,6 @@ SPDX-License-Identifier: MIT
  */
 void app_main()
 {
-    //Demo demo;
-    //int result = demo.F();
-    //printf("El resultado de la función F() es: %d\n", result);
 
     ESP_LOGI("Bienvenido","¡Hola Mundo! ESP32-C3 está funcionando\n"); 
 
