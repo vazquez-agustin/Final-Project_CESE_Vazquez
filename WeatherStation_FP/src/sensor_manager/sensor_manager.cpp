@@ -94,7 +94,7 @@ void SensorManager::sensorsRun()
         ESP_LOGI("SensorManager", "Humidity: %f %%", data.Humidity);
         ESP_LOGI("SensorManager", "Wind direction: %lu °", (unsigned long)grade_direction);
 
-        influxClient.send_data(moisture_percentage, speed_velocity, data.Temperature, data.Pressure, data.Humidity);
+        influxClient.send_data(moisture_percentage, speed_velocity, grade_direction, data.Temperature, data.Pressure, data.Humidity);
 
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
