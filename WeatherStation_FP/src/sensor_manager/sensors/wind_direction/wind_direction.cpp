@@ -37,19 +37,7 @@ SPDX-License-Identifier: MIT
 /* === Macros definitions ====================================================================== */
 
 /* === Private data type declarations ========================================================== */
-/** @brief Definición del voltaje de referencia para la conversión del ADC. */
-static const float ADC_REF_VOLTAGE = 5.0f;
 
-static const WindDirectionMapping directionTable[] = {
-    {0.4f,   0},   // N
-    {1.1f,  45},   // NE
-    {1.8f,  90},   // E
-    {2.5f, 135},   // SE
-    {3.2f, 180},   // S
-    {3.9f, 225},   // SW
-    {4.6f, 270},   // W
-    {5.0f, 315}    // NW
-};
 /* === Private variable declarations =========================================================== */
 
 /* === Private function declarations =========================================================== */
@@ -58,6 +46,17 @@ static const WindDirectionMapping directionTable[] = {
 struct WindDirectionMapping {
     float voltage;
     uint16_t angle;
+};
+
+static const WindDirectionMapping directionTable[] = {
+    {512, 0},    // N
+    {1024, 45},  // NE
+    {1536, 90},  // E
+    {2048, 135}, // SE
+    {2560, 180}, // S
+    {3072, 225}, // SW
+    {3584, 270}, // W
+    {4096, 315}  // NW
 };
 /* === Private variable definitions ============================================================ */
 
@@ -75,17 +74,35 @@ uint16_t WindDirectionSensor::getDirection()
 {
    uint32_t rawValue = adc->readRaw();
 
-   float voltage = (rawValue * ADC_REF_VOLTAGE) / adc->MAX_ADC_VALUE;
-
-   float minDiff = 1000.0f;
    uint16_t bestAngle = 0;
 
-   for (auto &entry : directionTable) {
-       float diff = std::fabs(voltage - entry.voltage);
-       if (diff < minDiff) {
-           minDiff = diff;
-           bestAngle = entry.angle;
-       }
+   if (rawValue <= 512) {
+       // Si el valor es menor que el primer umbral, asignar 0 grados
+       bestAngle = 0;
+   } else if (rawValue > 512 && rawValue <= 1024) {
+       // Si el valor está entre 512 y 1024, asignar 22.5 grados
+       bestAngle = 45;
+   } else if (rawValue > 1024 && rawValue <= 1536) {
+       // Si el valor está entre 1024 y 1536, asignar 67.5 grados
+       bestAngle = 90;
+   } else if (rawValue > 1536 && rawValue <= 2048) {
+       // Si el valor está entre 1536 y 2048, asignar 112.5 grados
+       bestAngle = 135;
+   } else if (rawValue > 2048 && rawValue <= 2560) {
+       // Si el valor está entre 2048 y 2560, asignar 157.5 grados
+       bestAngle = 180;
+   } else if (rawValue > 2560 && rawValue <= 3072) {
+       // Si el valor está entre 2560 y 3072, asignar 202.5 grados
+       bestAngle = 225;
+   } else if (rawValue > 3072 && rawValue <= 3584) {
+       // Si el valor está entre 3072 y 3584, asignar 247.5 grados
+       bestAngle = 270;
+   } else if (rawValue > 3584 && rawValue <= 4096) {
+       // Si el valor es mayor que el último umbral, asignar 292.5 grados
+       bestAngle = 315;
+   } else {
+       // Si no se encuentra un ángulo adecuado, retornar un valor por defecto
+       bestAngle = -1; // o cualquier otro valor que indique error
    }
 
    return bestAngle;
