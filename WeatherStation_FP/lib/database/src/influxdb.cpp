@@ -33,8 +33,9 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ================================================================ */
 #include "influxdb.h"
 #include "data_helper.h"
-// #include <esp_log.h>
-// #include <esp_err.h> // Provides esp_err_to_name function
+#include <esp_check.h> // Provides esp_err_to_name function
+#include <esp_log.h>
+#include <esp_err.h>
 /* === Macros definitions ====================================================================== */
 
 /* === Private data type declarations ========================================================== */
@@ -59,7 +60,7 @@ SPDX-License-Identifier: MIT
  */
 void InfluxDBClient::send_data(uint32_t moisture_value, uint32_t speed_value, float temperature_value, float pressure_value, float humidity_value) {
     // String with the data to send to InfluxDB
-    std::string d = prepare_data(moisture_value, speed_value, temperature_value, pressure_value, humidity_value);
+    std::string data = prepare_data(moisture_value, speed_value, temperature_value, pressure_value, humidity_value);
 
     std::string url = INFLUXDB_URL;
 
@@ -71,7 +72,7 @@ void InfluxDBClient::send_data(uint32_t moisture_value, uint32_t speed_value, fl
     esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_http_client_set_header(client, "Authorization", "Token " INFLUXDB_TOKEN);
     esp_http_client_set_header(client, "Content-Type", "text/plain");
-    esp_http_client_set_post_field(client, d.c_str(), d.length());
+    esp_http_client_set_post_field(client, data.c_str(), data.length());
 
     esp_err_t err = esp_http_client_perform(client);
 
@@ -79,7 +80,7 @@ void InfluxDBClient::send_data(uint32_t moisture_value, uint32_t speed_value, fl
         ESP_LOGI("InfluxDB", "Datos enviados correctamente a InfluxDB. Estado: %d", esp_http_client_get_status_code(client));
     } else {
         //ESP_LOGE("InfluxDB", "Error enviando datos: %s", esp_err_to_name(err));
-        ESP_LOGE("InfluxDB", "Detalles del error: %s", d.c_str());
+        ESP_LOGE("InfluxDB", "Detalles del error: %s", esp_err_to_name(err));
     }
 
     esp_http_client_cleanup(client);
