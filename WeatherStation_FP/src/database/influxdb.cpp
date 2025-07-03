@@ -54,10 +54,11 @@ SPDX-License-Identifier: MIT
  * @param moisture_value Valor numérico de la humedad del suelo (0-100%).
  * @param speed_value Valor numérico de la velocidad del viento en m/s.
  */
-void InfluxDBClient::send_data(uint32_t moisture_value, uint32_t speed_value, float temperature_value, float pressure_value, float humidity_value) {
+void InfluxDBClient::send_data(uint32_t moisture_value, uint32_t speed_value, uint32_t wind_direction_value, float temperature_value, float pressure_value, float humidity_value) {
     // String with the data to send to InfluxDB
     std::string post_data = "humedad_de_suelo,location=outside value=" + std::to_string(moisture_value) + "\n" +
                             "velocidad_de_viento,location=outside value=" + std::to_string(speed_value) + "\n" +
+                            "direccion_de_viento,location=outside value=" + std::to_string(wind_direction_value) + "\n" +
                             "temperatura,location=outside value=" + std::to_string(temperature_value) + "\n" +
                             "humedad,location=outside value=" + std::to_string(humidity_value) + "\n" +
                             "presion,location=outside value=" + std::to_string(pressure_value);

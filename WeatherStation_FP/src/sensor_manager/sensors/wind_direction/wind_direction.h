@@ -26,21 +26,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-#ifndef SENSOR_MANAGER_H
-#define SENSOR_MANAGER_H
+#ifndef WIND_DIRECTION_H
+#define WIND_DIRECTION_H
 
-/** @file    sensor_manager.h
- ** @brief   Interfaz pública de la clase SoilMoistureSensor.
+/** @file    wind_direction.h
+ ** @brief   Interfaz pública de la clase WindDirectionSensor
  **/
 
 /* === Headers files inclusions ================================================================ */
-#include "parameters.h"
-#include "WiFi.h"
-#include "influxdb.h"
-#include "soil_moisture.h"
-#include "wind_speed.h"
-#include "BME680.h"
-#include "wind_direction.h"
+
+#include "ADC.h"
+#include "driver/adc.h"
+#include <stdint.h>
 
 /* === Public macros definitions =============================================================== */
 
@@ -51,55 +48,48 @@ SPDX-License-Identifier: MIT
 /* === Public function declarations ============================================================ */
 
 /**
- * @class SensorManager
- * 
- * @brief Gestiona la inicialización, ejecución y transmisión de datos de los sensores.
+ * @class WindDirectionSensor
+ *
+ * @brief Clase para la lectura de dirección de viento desde una veleta analógica.
  */
-class SensorManager {
+class WindDirectionSensor
+{
 private:
-    /** @brief Instancia del administrador de la conexión Wi-Fi del sistema. */
-    WiFiManager WiFi;
-    /** @brief Instancia del cliente para conexión con la base de datos InfluxDB. */
-    InfluxDBClient influxClient;
-    /** @brief Instancia del sensor de humedad del suelo. */
-    SoilMoistureSensor soilMoistureSensor;
-    /** @brief Instancia del sensor de velocidad de viento. */
-    WindSpeedSensor windSpeedSensor;
-    /** @brief Instancia del sensor de dirección de viento. */
-    WindDirectionSensor windDirectionSensor;
-    /** @brief Instancia del sensor BME680. */
-    BME680 bme680;
-    
+    ADC *adc;
+
 public:
     /**
-     * @brief Constructor por defecto de SensorManager.
+     * @brief Constructor
+     * @param channel Canal ADC utilizado
      */
-    SensorManager();
+    WindDirectionSensor(adc1_channel_t channel);
+
     /**
-     * @brief Ejecuta la lectura de los sensores y envía los datos obtenidos a la base de datos.
+     * @brief Obtiene el ángulo de dirección del viento (0° a 360°)
+     *
+     * @return Dirección en grados
      */
-    void sensorsRun();
+    uint16_t getDirection();
+
     /**
-     * @brief Inicializa la conexión Wi-Fi.
+     * @brief Destructor
      */
-    void initWiFi();
-    /**
-     * @brief Inicializa la conexión con la base de datos InfluxDB.
-     */
-    void initInfluxDB();
+    ~WindDirectionSensor();
 };
 
 /* === C++ header ============================================================================== */
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-// C compatible function declarations
+    // C compatible function declarations
 
 #ifdef __cplusplus
 }
 #endif
 
 /* === End of documentation ==================================================================== */
-#endif // SENSOR_MANAGER_H
+
+#endif // WIND_DIRECTION_H

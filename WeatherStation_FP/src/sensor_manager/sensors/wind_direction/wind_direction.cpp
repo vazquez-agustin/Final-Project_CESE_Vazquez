@@ -27,12 +27,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 *************************************************************************************************/
 
-/** @file  sensor_manager.cpp
- ** @brief Implementación de la clase SensorManager
+/** @file  wind_direction.cpp
+ ** @brief Implementación de la clase WindDirectionSensor
  **/
 
 /* === Headers files inclusions ================================================================ */
-#include "sensor_manager.h"
+#include "wind_direction.h"
+#include <cmath>
 /* === Macros definitions ====================================================================== */
 
 /* === Private data type declarations ========================================================== */
@@ -42,60 +43,72 @@ SPDX-License-Identifier: MIT
 /* === Private function declarations =========================================================== */
 
 /* === Public variable definitions ============================================================= */
+struct WindDirectionMapping {
+    float voltage;
+    uint16_t angle;
+};
 
+static const WindDirectionMapping directionTable[] = {
+    {512, 0},    // N
+    {1024, 45},  // NE
+    {1536, 90},  // E
+    {2048, 135}, // SE
+    {2560, 180}, // S
+    {3072, 225}, // SW
+    {3584, 270}, // W
+    {4096, 315}  // NW
+};
 /* === Private variable definitions ============================================================ */
 
 /* === Private function implementation ========================================================= */
 
 /* === Public function implementation ========================================================== */
 
-/**
- * @brief Constructor por defecto de SensorManager.
- */
-SensorManager::SensorManager()
-    : soilMoistureSensor(ADC1_CHANNEL_0), windSpeedSensor(ADC1_CHANNEL_1), windDirectionSensor(ADC1_CHANNEL_4) {}
-
-/**
- * @brief Inicializa y establece la conexión Wi-Fi con el punto de acceso especificado.
- */
-void SensorManager::initWiFi()
+WindDirectionSensor::WindDirectionSensor(adc1_channel_t channel)
 {
-
-    WiFi.initialization(WIFI_SSID, WIFI_PASS);
-    ESP_LOGI("WiFi", "Esperando conexión WiFi...");
-
-    while (!WiFi.isConnected())
-    {
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
-
-    ESP_LOGI("WiFi", "Conexión WiFi establecida.");
+    adc = new ADC(channel);
+    adc->adcSetup();
 }
 
-/**
- * @brief Ejecuta el ciclo continuo de lecturas de sensores y transmisión a InfluxDB.
- *
- * @note Esta función corre en un bucle infinito; debería ejecutarse como una tarea separada.
- */
-void SensorManager::sensorsRun()
+uint16_t WindDirectionSensor::getDirection()
 {
-    while (true)
-    {
-        uint32_t moisture_percentage = soilMoistureSensor.readPercentage();
-        uint32_t wind_velocity = windSpeedSensor.getSpeed();
-        uint32_t grade_direction = windDirectionSensor.getDirection();
-        measure_t data;
-        bme680.getMeasure(&data);
+   uint32_t rawValue = adc->readRaw();
 
-        ESP_LOGI("SensorManager", "Soil moisture: %lu%%", (unsigned long)moisture_percentage);
-        ESP_LOGI("SensorManager", "Wind speed: %lu m/s", (unsigned long)wind_velocity);
-        ESP_LOGI("SensorManager", "Temperature: %f °C", data.Temperature);
-        ESP_LOGI("SensorManager", "Pressure: %f hPa", data.Pressure);
-        ESP_LOGI("SensorManager", "Humidity: %f %%", data.Humidity);
-        ESP_LOGI("SensorManager", "Wind direction: %lu °", (unsigned long)grade_direction);
+   uint16_t bestAngle = 0;
 
-        influxClient.send_data(moisture_percentage, wind_velocity, grade_direction, data.Temperature, data.Pressure, data.Humidity);
+   if (rawValue <= 512) {
+       // Si el valor es menor que el primer umbral, asignar 0 grados
+       bestAngle = 0;
+   } else if (rawValue > 512 && rawValue <= 1024) {
+       // Si el valor está entre 512 y 1024, asignar 22.5 grados
+       bestAngle = 45;
+   } else if (rawValue > 1024 && rawValue <= 1536) {
+       // Si el valor está entre 1024 y 1536, asignar 67.5 grados
+       bestAngle = 90;
+   } else if (rawValue > 1536 && rawValue <= 2048) {
+       // Si el valor está entre 1536 y 2048, asignar 112.5 grados
+       bestAngle = 135;
+   } else if (rawValue > 2048 && rawValue <= 2560) {
+       // Si el valor está entre 2048 y 2560, asignar 157.5 grados
+       bestAngle = 180;
+   } else if (rawValue > 2560 && rawValue <= 3072) {
+       // Si el valor está entre 2560 y 3072, asignar 202.5 grados
+       bestAngle = 225;
+   } else if (rawValue > 3072 && rawValue <= 3584) {
+       // Si el valor está entre 3072 y 3584, asignar 247.5 grados
+       bestAngle = 270;
+   } else if (rawValue > 3584 && rawValue <= 4096) {
+       // Si el valor es mayor que el último umbral, asignar 292.5 grados
+       bestAngle = 315;
+   } else {
+       // Si no se encuentra un ángulo adecuado, retornar un valor por defecto
+       bestAngle = -1; // o cualquier otro valor que indique error
+   }
 
-        vTaskDelay(pdMS_TO_TICKS(5000));
-    }
+   return bestAngle;
+}
+
+WindDirectionSensor::~WindDirectionSensor()
+{
+    delete adc;
 }
