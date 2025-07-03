@@ -82,19 +82,19 @@ void SensorManager::sensorsRun()
     while (true)
     {
         uint32_t moisture_percentage = soilMoistureSensor.readPercentage();
-        uint32_t speed_velocity = windSpeedSensor.getSpeed();
+        uint32_t wind_velocity = windSpeedSensor.getSpeed();
         uint32_t grade_direction = windDirectionSensor.getDirection();
         measure_t data;
-        bme680.getMeasure(&data);;
+        bme680.getMeasure(&data);
 
         ESP_LOGI("SensorManager", "Soil moisture: %lu%%", (unsigned long)moisture_percentage);
-        ESP_LOGI("SensorManager", "Wind speed: %lu m/s", (unsigned long)speed_velocity);
+        ESP_LOGI("SensorManager", "Wind speed: %lu m/s", (unsigned long)wind_velocity);
         ESP_LOGI("SensorManager", "Temperature: %f °C", data.Temperature);
         ESP_LOGI("SensorManager", "Pressure: %f hPa", data.Pressure);
         ESP_LOGI("SensorManager", "Humidity: %f %%", data.Humidity);
         ESP_LOGI("SensorManager", "Wind direction: %lu °", (unsigned long)grade_direction);
 
-        influxClient.send_data(moisture_percentage, speed_velocity, grade_direction, data.Temperature, data.Pressure, data.Humidity);
+        influxClient.send_data(moisture_percentage, wind_velocity, grade_direction, data.Temperature, data.Pressure, data.Humidity);
 
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
